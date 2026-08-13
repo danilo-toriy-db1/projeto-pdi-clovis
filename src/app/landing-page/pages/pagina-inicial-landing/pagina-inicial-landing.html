@@ -1,0 +1,47 @@
+<section class="pagina-inicial-landing">
+  <div class="pagina-inicial-landing__hero">
+    <div class="pagina-inicial-landing__hero-img">
+      <img
+        ngSrc="/logo.svg"
+        width="160"
+        height="160"
+        alt="Logo do projeto"
+        class="pagina-inicial-landing__logo"
+        priority
+      />
+      <h1 class="pagina-inicial-landing__titulo">My Landing Page</h1>
+    </div>
+
+    <div class="pagina-inicial-landing__hero-texto">
+      <h2 class="pagina-inicial-landing__boas-vindas">Seja bem-vindo(a)!</h2>
+      <p class="pagina-inicial-landing__descricao">
+        Apresente seus dados pessoais, suas habilidades e seus contatos em uma Landing Page própria,
+        replicável para qualquer pessoa cadastrada no Admin.
+      </p>
+    </div>
+  </div>
+
+  <div class="pagina-inicial-landing__cards">
+    <a
+      class="pagina-inicial-landing__card"
+      [href]="urlRepositorioGithub"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img ngSrc="/icons/github-icon.svg" width="28" height="28" alt="" />
+      <span class="pagina-inicial-landing__card-titulo">Repositório no GitHub</span>
+      <span>Veja o código-fonte deste projeto no GitHub.</span>
+    </a>
+
+    <button type="button" class="pagina-inicial-landing__card" (click)="irParaEditarDados()">
+      <span class="pagina-inicial-landing__card-titulo">Sua Landing Page</span>
+      <span>Crie sua conta ou edite os dados já cadastrados no Admin.</span>
+    </button>
+
+    <button type="button" class="pagina-inicial-landing__card" (click)="alternarTema()">
+      <img ngSrc="/icons/change-icon.svg" width="28" height="28" alt="" />
+      <span class="pagina-inicial-landing__card-titulo">Tema e responsividade</span>
+      <span>A aplicação é responsiva e funciona nos temas claro e escuro.</span>
+    </button>
+  </div>
+</section>

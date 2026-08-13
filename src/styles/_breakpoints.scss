@@ -1,0 +1,24 @@
+$breakpoint-mobile-max: 767px;
+$breakpoint-tablet-min: 768px;
+$breakpoint-tablet-max: 1023px;
+$breakpoint-desktop-min: 1024px;
+
+@mixin responsivo($dispositivo) {
+  @if $dispositivo == 'celular' {
+    @media (max-width: $breakpoint-mobile-max) {
+      @content;
+    }
+  } @else if $dispositivo == 'tablet' {
+    @media (min-width: $breakpoint-tablet-min) and (max-width: $breakpoint-tablet-max) {
+      @content;
+    }
+  } @else if $dispositivo == 'desktop' {
+    @media (min-width: $breakpoint-desktop-min) {
+      @content;
+    }
+  } @else if $dispositivo == 'tablet-e-acima' {
+    @media (min-width: $breakpoint-tablet-min) {
+      @content;
+    }
+  }
+}

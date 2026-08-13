@@ -1,0 +1,73 @@
+<section class="editar-usuarios">
+  <h1>Editar Usuários</h1>
+
+  <ul class="editar-usuarios__grade-usuarios">
+    @for (usuarioListado of usuarios(); track usuarioListado.usuario) {
+      <li class="editar-usuarios__card-usuario">
+        <button
+          type="button"
+          class="editar-usuarios__abrir-usuario"
+          [attr.aria-label]="'Editar usuário ' + usuarioListado.usuario"
+          (click)="abrirEdicaoUsuario(usuarioListado)"
+        >
+          <h2>{{ usuarioListado.usuario }}</h2>
+          <span class="editar-usuarios__role">{{ usuarioListado.role }}</span>
+        </button>
+      </li>
+    } @empty {
+      <li class="editar-usuarios__sem-usuarios">Nenhum usuário cadastrado.</li>
+    }
+
+    <li class="editar-usuarios__card-usuario editar-usuarios__card-usuario--adicionar">
+      <button type="button" (click)="abrirCriacaoUsuario()" aria-label="Adicionar usuário">
+        <img
+          [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'"
+          width="32"
+          height="32"
+          alt=""
+        />
+        <span>Adicionar usuário</span>
+      </button>
+    </li>
+  </ul>
+</section>
+
+@if (modalUsuarioAberto()) {
+  <div class="editar-usuarios__overlay">
+    <app-edit-modal
+      [titulo]="usuarioEmEdicao() ? 'Editar usuário' : 'Adicionar usuário'"
+      [feedback]="feedbackUsuario()"
+      (fechar)="cancelarEdicaoUsuario()"
+    >
+      <app-formulario-usuario
+        [usuarioInicial]="usuarioEmEdicao()"
+        [rolesDisponiveis]="rolesDisponiveis()"
+        [erro]="erroUsuario()"
+        (salvar)="salvarUsuario($event)"
+        (cancelar)="cancelarEdicaoUsuario()"
+      />
+      @if (usuarioEmEdicao(); as alvo) {
+        @if (podeRemover(alvo)) {
+          <button
+            type="button"
+            class="editar-usuarios__remover-usuario"
+            (click)="pedirRemocaoUsuarioEmEdicao()"
+          >
+            <img ngSrc="/icons/remove-icon.svg" width="16" height="16" alt="" />
+            Remover usuário
+          </button>
+        }
+      }
+    </app-edit-modal>
+  </div>
+}
+
+@if (usuarioParaRemover(); as usuarioAlvo) {
+  <div class="editar-usuarios__overlay">
+    <app-confirm-modal
+      [mensagem]="'Remover o usuário ' + usuarioAlvo.usuario + '?'"
+      (confirmar)="confirmarRemocao()"
+      (cancelar)="cancelarRemocao()"
+    />
+  </div>
+}

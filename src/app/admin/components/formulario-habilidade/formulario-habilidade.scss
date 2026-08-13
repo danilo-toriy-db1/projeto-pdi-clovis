@@ -1,0 +1,72 @@
+@use '../../../../styles/flexbox' as flex;
+
+:host {
+  display: block;
+}
+
+.formulario-habilidade {
+  @include flex.flexbox($align: flex-end, $wrap: wrap);
+
+  gap: 0.75rem;
+}
+
+.formulario-habilidade__campo {
+  @include flex.flexbox($direction: column);
+
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.875rem;
+  }
+
+  input,
+  select {
+    padding: 0.5rem;
+    border: 1px solid var(--dashed-line-color);
+    border-radius: 0.375rem;
+  }
+}
+
+.formulario-habilidade__acoes {
+  @include flex.flexbox;
+
+  gap: 0.5rem;
+
+  button {
+    @include flex.flexbox($align: center, $inline: true);
+
+    gap: 0.375rem;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.formulario-habilidade__seletor-icone {
+  @include flex.flexbox($align: center, $inline: true);
+
+  gap: 0.5rem;
+  align-self: flex-start;
+  border: 1px solid var(--dashed-line-color);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--card-edit);
+  color: inherit;
+  font-family: var(--text-font);
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+}
+
+.formulario-habilidade__overlay {
+  @include flex.flexbox($align: center, $justify: center);
+
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 40;
+}

@@ -1,0 +1,20 @@
+<div
+  class="confirm-modal"
+  role="alertdialog"
+  aria-modal="true"
+  aria-labelledby="confirm-modal-titulo"
+  aria-describedby="confirm-modal-mensagem"
+>
+  <h2 id="confirm-modal-titulo">Confirmar exclusão</h2>
+  <p id="confirm-modal-mensagem">
+    {{ mensagem() }} Esta ação é permanente e não pode ser desfeita.
+  </p>
+
+  <div class="confirm-modal__acoes">
+    <button type="button" class="confirm-modal__cancelar" (click)="aoCancelar()">Cancelar</button>
+    <button type="button" class="confirm-modal__confirmar" (click)="aoConfirmar()">
+      <img ngSrc="/icons/delete-icon.svg" width="16" height="16" alt="" />
+      Excluir
+    </button>
+  </div>
+</div>

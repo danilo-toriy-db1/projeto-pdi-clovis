@@ -1,0 +1,206 @@
+@use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/sem-preferencia-de-movimento-reduzido' as sem-movimento;
+
+:host {
+  display: block;
+  width: 100%;
+  color: var(--white-text);
+  background: var(--background-main);
+  margin-top: 3rem;
+
+  @include bp.responsivo('desktop') {
+    min-height: 87vh;
+  }
+
+  @include bp.responsivo('tablet') {
+    min-height: 90vh;
+  }
+
+  @include bp.responsivo('celular') {
+    min-height: 90vh;
+  }
+}
+
+.habilidades-landing__titulo {
+  font-family: var(--cursive-font);
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.habilidades-landing__arvore {
+  @include flex.flexbox($align: center, $direction: column);
+
+  position: relative;
+  margin: 0 auto;
+  padding: 2.5rem 0;
+  background-color: var(--container-background);
+  border: 0.1rem solid var(--container-background);
+  border-radius: 1rem;
+
+  @include bp.responsivo('desktop') {
+    width: 70vw;
+  }
+
+  @include bp.responsivo('tablet') {
+    width: 70vw;
+  }
+
+  @include bp.responsivo('celular') {
+    width: 90vw;
+  }
+}
+
+.habilidades-landing__linha-central {
+  display: block;
+  width: 2px;
+  height: 3rem;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--dashed-line-color) 0 6px,
+    transparent 6px 12px
+  );
+
+  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+    animation: habilidades-linha-descer var(--duration-animation-linha-principal) ease-out;
+  }
+}
+
+@keyframes habilidades-linha-descer {
+  from {
+    height: 0;
+  }
+  to {
+    height: 3rem;
+  }
+}
+
+.habilidades-landing__ramos {
+  @include flex.flexbox($justify: center);
+
+  gap: 3rem;
+  width: 100%;
+
+  @include bp.responsivo('celular') {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+.habilidades-landing__ramo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.habilidades-landing__linha-ramo {
+  display: block;
+  width: 100%;
+  max-width: 12rem;
+  height: 2px;
+  margin-bottom: 1rem;
+  background: repeating-linear-gradient(
+    to right,
+    var(--dashed-line-color) 0 6px,
+    transparent 6px 12px
+  );
+
+  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+    animation: habilidades-ramo-crescer var(--duration-animation-linha-galho) ease-out
+      var(--delay-galho-animation) backwards;
+  }
+}
+
+@keyframes habilidades-ramo-crescer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.habilidades-landing__lista {
+  @include flex.flexbox($justify: center, $wrap: wrap);
+
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.habilidades-landing__cartao {
+  @include flex.flexbox($align: center);
+
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-family: var(--text-font);
+  opacity: 1;
+
+  &--soft {
+    background: var(--soft-skill-background);
+    border: 1px solid var(--soft-skill-border);
+    color: var(--gray-text);
+  }
+
+  &--hard {
+    background: var(--hard-skill-background);
+    border: 1px solid var(--hard-skill-border);
+    color: var(--gray-text);
+  }
+
+  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+    animation: habilidades-fade-in var(--duration-animation-fadeIn) ease-out var(--delay-fadeIn)
+      backwards;
+  }
+}
+
+@keyframes habilidades-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.habilidades-landing__acoes {
+  @include flex.flexbox($justify: space-evenly, $direction: row);
+
+  gap: 1rem;
+  margin: 2rem 0;
+
+  button {
+    @include flex.flexbox($justify: space-between, $align: center, $direction: row, $inline: true);
+
+    gap: 0.5rem;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    text-align: center;
+    font-family: var(--text-font-secundary);
+    font-weight: 300;
+    font-size: 1.1rem;
+
+    @include bp.responsivo('desktop') {
+      padding: 1.25rem 3rem;
+    }
+
+    @include bp.responsivo('tablet') {
+      padding: 1rem 2rem;
+    }
+
+    @include bp.responsivo('celular') {
+      padding: 0.5rem 1rem;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

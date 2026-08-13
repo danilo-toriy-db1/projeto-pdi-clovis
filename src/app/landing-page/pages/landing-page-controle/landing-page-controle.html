@@ -1,0 +1,76 @@
+@if (ehSuper()) {
+  <app-header />
+  <main class="landing-page-controle">
+    @if (entradaAtual(); as entrada) {
+      <article class="landing-page-controle__cartao">
+        <img
+          [src]="entrada.dados.imagem"
+          width="96"
+          height="96"
+          alt="Foto de perfil de {{ entrada.dados.nome }}"
+        />
+        <h1>{{ entrada.dados.nome || 'Sem nome cadastrado' }}</h1>
+
+        <dl class="landing-page-controle__dados">
+          <div>
+            <dt>Idade</dt>
+            <dd>{{ entrada.dados.idade }}</dd>
+          </div>
+          <div>
+            <dt>Carreira</dt>
+            <dd>{{ entrada.dados.carreira }}</dd>
+          </div>
+          <div>
+            <dt>Profissão</dt>
+            <dd>{{ entrada.dados.profissao }}</dd>
+          </div>
+          <div>
+            <dt>Empresa</dt>
+            <dd>{{ entrada.dados.empresa }}</dd>
+          </div>
+        </dl>
+
+        <p>{{ entrada.dados.descricao.biografia }}</p>
+
+        <ul class="landing-page-controle__habilidades">
+          @for (entradaHabilidade of habilidadesAtuais(); track $index) {
+            <li>
+              <img
+                [ngSrc]="'/icons/skills/' + entradaHabilidade.habilidade.icone"
+                width="24"
+                height="24"
+                alt=""
+              />
+              <span>{{ entradaHabilidade.habilidade.habilidade }}</span>
+            </li>
+          } @empty {
+            <li>Nenhuma habilidade cadastrada para esta pessoa.</li>
+          }
+        </ul>
+
+        <div class="landing-page-controle__paginacao">
+          <button
+            type="button"
+            [disabled]="!temEntradaAnterior()"
+            [attr.aria-label]="rotuloAnterior()"
+            (click)="voltar()"
+          >
+            Anterior
+          </button>
+          <button
+            type="button"
+            [disabled]="!temProximaEntrada()"
+            [attr.aria-label]="rotuloProximo()"
+            (click)="avancar()"
+          >
+            Próximo
+          </button>
+        </div>
+      </article>
+    } @else {
+      <p class="landing-page-controle__vazio">Nenhuma Landing Page cadastrada ainda.</p>
+    }
+  </main>
+} @else {
+  <app-landing-page-nao-encontrada [mensagem]="mensagemNaoEncontrada" />
+}

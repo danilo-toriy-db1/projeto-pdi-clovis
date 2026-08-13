@@ -1,0 +1,23 @@
+<div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-titulo">
+  <div class="edit-modal__cabecalho">
+    <h2 id="edit-modal-titulo">{{ titulo() }}</h2>
+    @if (!feedback()) {
+      <button type="button" class="edit-modal__fechar" (click)="aoFechar()" aria-label="Fechar">
+        <img
+          [ngSrc]="temaEscuro() ? '/icons/close-icon.svg' : '/icons/black-close-icon.svg'"
+          width="16"
+          height="16"
+          alt=""
+        />
+      </button>
+    }
+  </div>
+
+  <div class="edit-modal__conteudo">
+    @if (feedback(); as estadoAtual) {
+      <app-feedback-modal [estado]="estadoAtual.estado" [mensagem]="estadoAtual.mensagem ?? ''" />
+    } @else {
+      <ng-content />
+    }
+  </div>
+</div>

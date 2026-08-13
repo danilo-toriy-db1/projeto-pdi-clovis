@@ -1,0 +1,17 @@
+<form class="formulario-descricao-about" [formGroup]="formulario" (ngSubmit)="enviar()">
+  <div class="formulario-descricao-about__campo">
+    <label for="descricao-valor">{{ rotulo() }}</label>
+    <textarea
+      #campoValor
+      id="descricao-valor"
+      formControlName="valor"
+      [class.campo-invalido]="tentouSubmeter() && formulario.controls.valor.invalid"
+    ></textarea>
+  </div>
+
+  <div class="formulario-descricao-about__acoes">
+    <button type="submit">Salvar</button>
+    <button type="button" (click)="resetar()">Resetar</button>
+    <button type="button" (click)="aoCancelar()">Cancelar</button>
+  </div>
+</form>

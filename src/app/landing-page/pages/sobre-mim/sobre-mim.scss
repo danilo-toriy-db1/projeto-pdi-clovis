@@ -1,0 +1,114 @@
+@use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/flexbox' as flex;
+
+:host {
+  display: block;
+  color: var(--white-text);
+}
+
+.sobre-mim {
+  @include flex.flexbox($justify: center);
+
+  padding: 2rem 1.5rem;
+}
+
+.sobre-mim__carteirinha {
+  @include flex.flexbox($align: flex-start);
+
+  gap: 2rem;
+  max-width: 60rem;
+  width: 100%;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  background: var(--color-card);
+  color: var(--gray-text);
+  box-shadow: 0 1rem 2rem var(--card-box-shadow);
+
+  @include bp.responsivo('tablet') {
+    gap: 1.5rem;
+    padding: 1.75rem;
+  }
+
+  @include bp.responsivo('celular') {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+}
+
+.sobre-mim__coluna-pessoal {
+  @include flex.flexbox($align: center, $direction: column);
+
+  flex: 0 0 14rem;
+  gap: 1rem;
+  padding-right: 2rem;
+  border-right: 1px solid var(--dashed-line-color);
+  text-align: center;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    word-break: break-word;
+  }
+
+  @include bp.responsivo('tablet') {
+    flex-basis: 11rem;
+    padding-right: 1.5rem;
+  }
+
+  @include bp.responsivo('celular') {
+    flex: none;
+    width: 100%;
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--dashed-line-color);
+  }
+}
+
+.sobre-mim__imagem {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sobre-mim__dados {
+  @include flex.flexbox($direction: column);
+
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+
+  div {
+    @include flex.flexbox($justify: space-between);
+
+    gap: 0.5rem;
+  }
+
+  dt {
+    font-weight: bold;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.sobre-mim__coluna-descricao {
+  @include flex.flexbox($direction: column);
+
+  flex: 1;
+  gap: 1.25rem;
+  min-width: 0;
+
+  h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}

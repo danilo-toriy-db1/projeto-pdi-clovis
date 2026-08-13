@@ -1,0 +1,35 @@
+<div
+  class="seletor-icone-habilidade"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="seletor-icone-habilidade-titulo"
+>
+  <div class="seletor-icone-habilidade__cabecalho">
+    <h2 id="seletor-icone-habilidade-titulo">Escolher ícone</h2>
+    <button
+      type="button"
+      class="seletor-icone-habilidade__fechar"
+      (click)="aoFechar()"
+      aria-label="Fechar"
+    >
+      <img ngSrc="/icons/close-icon.svg" width="16" height="16" alt="" />
+    </button>
+  </div>
+
+  <ul class="seletor-icone-habilidade__grade">
+    @for (icone of iconesDisponiveis; track icone) {
+      <li>
+        <button
+          type="button"
+          class="seletor-icone-habilidade__opcao"
+          [class.seletor-icone-habilidade__opcao--selecionado]="icone === iconeSelecionado()"
+          [attr.aria-pressed]="icone === iconeSelecionado()"
+          (click)="aoSelecionar(icone)"
+        >
+          <img [ngSrc]="'/icons/skills/' + icone" width="32" height="32" alt="" />
+          <span>{{ icone }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</div>

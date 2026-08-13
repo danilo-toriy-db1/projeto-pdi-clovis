@@ -1,0 +1,80 @@
+{
+  "artifactLanguage": "pt",
+  "workMode": "maintenance",
+  "discoveryAnswers": {
+    "systemType": "a parte do discovery ja foi realizado. Pule essa etapa e leia tudo que tem no projeto",
+    "scope": {
+      "type": "whole_project"
+    },
+    "businessInput": "ja estao documentadas. Quero que continue a partir da etapa dois, pois os artefatos e documentos ja foram criados",
+    "restrictions": [
+      "pular o discovery e partir para a etapa dois sem documentar nada. Isso porque essa etapa ja foi realizado"
+    ]
+  },
+  "domainIndex": [
+    {
+      "name": "Login / Autenticação",
+      "slug": "login",
+      "dependsOn": [],
+      "order": 0,
+      "documented": true,
+      "specified": true
+    },
+    {
+      "name": "Admin",
+      "slug": "admin",
+      "dependsOn": [
+        "login"
+      ],
+      "order": 1,
+      "documented": true,
+      "specified": true
+    },
+    {
+      "name": "Landing Page",
+      "slug": "landing-page",
+      "dependsOn": [
+        "admin"
+      ],
+      "order": 2,
+      "documented": true,
+      "specified": true
+    }
+  ],
+  "technicalSkillIndex": [
+    {
+      "name": "Configuração de Testes com Jest",
+      "slug": "configuracao-testes-jest",
+      "description": "Como migrar o test runner do scaffold Angular (Vitest) para Jest, incluindo jest-preset-angular, e o padrão de organização de specs junto aos arquivos testados.",
+      "documented": true
+    },
+    {
+      "name": "Sistema de Temas Claro/Escuro",
+      "slug": "sistema-temas-claro-escuro",
+      "description": "Como implementar a alternância de tema claro/escuro em toda a aplicação via mixins SASS, usando a paleta de cores e tipografia fornecidas, com a variável --background-main fixa e as demais harmonizadas.",
+      "documented": true
+    },
+    {
+      "name": "Documentação via User Stories e Diagrama de Classes",
+      "slug": "documentacao-user-stories-diagrama-classes",
+      "description": "Como manter a documentação do projeto por meio de User Stories organizadas por módulo/tipo de componente e de um diagrama de classes das entidades e relacionamentos, no lugar de Swagger/Postman/Storybook/ADR.",
+      "documented": true
+    },
+    {
+      "name": "Gestão de Ícones SVG Locais",
+      "slug": "gestao-icones-svg-locais",
+      "description": "Como armazenar e referenciar localmente (sem CDN externo) os ícones SVG usados pelas habilidades (HabilitiesModel), por chave/nome de arquivo.",
+      "documented": true
+    }
+  ],
+  "authoritativeDocsSource": {
+    "kind": "skills"
+  },
+  "originalWorkMode": "greenfield",
+  "implementedSpecs": [
+    {
+      "slug": "002-admin",
+      "closedAt": "2026-08-11T17:45:34.894Z"
+    }
+  ]
+}

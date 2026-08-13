@@ -1,0 +1,5 @@
+@mixin preferencia-de-movimento-reduzido {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

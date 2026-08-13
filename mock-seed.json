@@ -1,0 +1,91 @@
+{
+  "_instrucoes": [
+    "Preencha os campos '<preencher: ...>' com os dados reais.",
+    "As chaves de primeiro nível ('login.usuarios', 'login.sessao', 'admin.vinculo-usuarios', 'admin.pessoas', 'admin.habilidades') são as mesmas chaves usadas no localStorage pelos services do projeto (AuthService, PessoaService, HabilidadeService).",
+    "'login.usuarios' já vem com os 3 usuários fixos que o AuthService semeia automaticamente (user/123U, admin/123@, superAdmin/123Super) — eles precisam continuar aqui, porque o seed automático só roda quando a chave 'login.usuarios' ainda não existe no localStorage; um mock que sobrescreva essa chave sem esses 3 usuários os apagaria.",
+    "O perfil completo (Sobre Mim + habilidades) abaixo está vinculado ao usuário fixo 'admin', por ser o que tem rota pessoal no módulo Admin (/admin/:usuario) e acesso a 'Editar Dados'. Não é necessário criar um usuário novo para isso — só preencher os dados vinculados a ele.",
+    "Se quiser um perfil completo também para 'user' ou 'superAdmin', duplique um item em 'admin.vinculo-usuarios', 'admin.pessoas' e 'admin.habilidades' com um novo 'id' e o respectivo nome de usuário.",
+    "O campo 'id' precisa ser o MESMO número em 'admin.vinculo-usuarios', 'admin.pessoas[].id' e em cada 'admin.habilidades[].id' — é o que liga o usuário logado à sua Landing Page (/landing-page/:id) e às habilidades exibidas nela.",
+    "As senhas acima ('123U', '123@', '123Super') estão em texto puro só para leitura; no localStorage real cada uma é armazenada criptografada pelo Encrypter (src/app/shared/services/encrypter.ts).",
+    "'imagem' (em admin.pessoas) e 'icone' (em cada habilidade) podem ficar em branco — o código cai automaticamente nos placeholders padrão (/logo.svg e placeholder.svg).",
+    "'login.sessao' é opcional: preencha só se quiser abrir a aplicação já autenticado, sem passar pela tela de login.",
+    "'tipo' de cada habilidade aceita: 'soft-skill' ou 'hard-skill' (enum TipoHabilidade) — mantenha ao menos uma de cada para ver as duas ramificações da página de Habilidades."
+  ],
+  "login.usuarios": [
+    {
+      "usuario": "user",
+      "senha": "123U",
+      "role": "user"
+    },
+    {
+      "usuario": "admin",
+      "senha": "123@",
+      "role": "admin"
+    },
+    {
+      "usuario": "superAdmin",
+      "senha": "123Super",
+      "role": "super"
+    }
+  ],
+  "login.sessao": {
+    "usuario": "<preencher: 'admin', 'user' ou 'superAdmin', ou deixe vazio para não logar automaticamente>",
+    "role": "<preencher: role correspondente ao usuario acima>"
+  },
+  "admin.vinculo-usuarios": {
+    "admin": 1
+  },
+  "admin.pessoas": [
+    {
+      "id": 1,
+      "dados": {
+        "nome": "Danilo",
+        "idade": 20,
+        "carreira": "Estudante",
+        "profissao": "Estagiário",
+        "empresa": "DB1 Group",
+        "imagem": "<preencher: caminho da foto, ou deixe em branco para usar o placeholder /logo.svg>",
+        "descricao": {
+          "biografia": "biografia curta para servir de exemplo. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus tempore nesciunt impedit corrupti, ab hic culpa fugiat iusto aperiam nulla maiores molestiae sint esse sunt pariatur. Atque, ipsam fuga?",
+          "hobbies": "hobbies exemplo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus tempore nesciunt impedit corrupti, ab hic culpa fugiat iusto aperiam nulla maiores molestiae sint esse sunt pariatur. Atque, ipsam fuga?",
+          "desgostos": "desgostos exemplo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus tempore nesciunt impedit corrupti, ab hic culpa fugiat iusto aperiam nulla maiores molestiae sint esse sunt pariatur. Atque, ipsam fuga?",
+          "objetivos": "objetivos de exemplo Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, doloribus tempore nesciunt impedit corrupti, ab hic culpa fugiat iusto aperiam nulla maiores molestiae sint esse sunt pariatur. Atque, ipsam fuga?"
+        }
+      }
+    }
+  ],
+  "admin.habilidades": [
+    {
+      "id": 1,
+      "habilidade": {
+        "habilidade": "Comunicação",
+        "tipo": "soft-skill",
+        "icone": "<preencher: caminho do SVG local, ou deixe em branco para usar placeholder.svg>"
+      }
+    },
+    {
+      "id": 1,
+      "habilidade": {
+        "habilidade": "Trabalho em Equipe",
+        "tipo": "soft-skill",
+        "icone": "<preencher: caminho do SVG local, ou deixe em branco para usar placeholder.svg>"
+      }
+    },
+    {
+      "id": 1,
+      "habilidade": {
+        "habilidade": "Angular",
+        "tipo": "hard-skill",
+        "icone": "<preencher: caminho do SVG local, ou deixe em branco para usar placeholder.svg>"
+      }
+    },
+    {
+      "id": 1,
+      "habilidade": {
+        "habilidade": "TypeScript",
+        "tipo": "hard-skill",
+        "icone": "<preencher: caminho do SVG local, ou deixe em branco para usar placeholder.svg>"
+      }
+    }
+  ]
+}

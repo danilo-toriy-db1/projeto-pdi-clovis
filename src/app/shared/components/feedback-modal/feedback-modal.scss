@@ -1,0 +1,37 @@
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/sem-preferencia-de-movimento-reduzido' as sem-movimento;
+
+:host {
+  display: block;
+}
+
+.feedback-modal {
+  @include flex.flexbox($align: center, $direction: column);
+
+  gap: 0.75rem;
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+  color: var(--gray-text);
+}
+
+.feedback-modal__spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid var(--dashed-line-color);
+  border-top-color: var(--background-header);
+  border-radius: 50%;
+
+  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+    animation: feedback-modal-girar 1s linear infinite;
+  }
+}
+
+.feedback-modal__check {
+  color: #2e7d32;
+}
+
+@keyframes feedback-modal-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}

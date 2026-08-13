@@ -1,0 +1,65 @@
+<form class="formulario-habilidade" [formGroup]="formulario" (ngSubmit)="enviar()">
+  <div class="formulario-habilidade__campo">
+    <label for="habilidade-nome">Nome da habilidade</label>
+    <input
+      #campoHabilidade
+      id="habilidade-nome"
+      type="text"
+      formControlName="habilidade"
+      [class.campo-invalido]="tentouSubmeter() && formulario.controls.habilidade.invalid"
+    />
+  </div>
+
+  <div class="formulario-habilidade__campo">
+    <label for="habilidade-tipo">Tipo</label>
+    <select id="habilidade-tipo" formControlName="tipo">
+      <option [value]="TipoHabilidade.SOFT">Soft skill</option>
+      <option [value]="TipoHabilidade.HARD">Hard skill</option>
+    </select>
+  </div>
+
+  <div class="formulario-habilidade__campo">
+    <label id="habilidade-icone-rotulo">Ícone</label>
+    <button
+      type="button"
+      class="formulario-habilidade__seletor-icone"
+      aria-describedby="habilidade-icone-rotulo"
+      (click)="abrirSeletorIcone()"
+    >
+      <img
+        [ngSrc]="'/icons/skills/' + (formulario.controls.icone.value || ICONE_PLACEHOLDER)"
+        width="24"
+        height="24"
+        alt=""
+      />
+      {{ formulario.controls.icone.value || 'Escolher ícone' }}
+    </button>
+  </div>
+
+  @if (seletorIconeAberto()) {
+    <div class="formulario-habilidade__overlay">
+      <app-seletor-icone-habilidade
+        [iconeSelecionado]="formulario.controls.icone.value"
+        (selecionar)="selecionarIcone($event)"
+        (fechar)="fecharSeletorIcone()"
+      />
+    </div>
+  }
+
+  <div class="formulario-habilidade__acoes">
+    <button type="submit">
+      @if (habilidadeInicial()) {
+        <img ngSrc="/icons/edit-icon.svg" width="16" height="16" alt="" />
+      } @else {
+        <img [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'" width="16" height="16" alt="" />
+      }
+      {{ habilidadeInicial() ? 'Salvar habilidade' : 'Adicionar habilidade' }}
+    </button>
+    @if (habilidadeInicial()) {
+      <button type="button" (click)="aoCancelar()">
+        <img [ngSrc]="temaEscuro() ? '/icons/close-icon.svg' : '/icons/black-close-icon.svg'" width="16" height="16" alt="" />
+        Cancelar
+      </button>
+    }
+  </div>
+</form>

@@ -1,0 +1,32 @@
+@use './sem-preferencia-de-movimento-reduzido' as sem-movimento;
+
+@mixin brilho-card($animado: false) {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--brilho-card);
+    pointer-events: none;
+
+    @if $animado {
+      background-size: 250% 250%;
+      background-position: 150% 150%;
+
+      @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+        animation: brilho-card-passar 3s ease-in-out infinite alternate;
+      }
+
+      @keyframes brilho-card-passar {
+        0% {
+          background-position: 150% 150%;
+        }
+        100% {
+          background-position: -50% -50%;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<app-header />
+
+<main class="url-invalida">
+  <h1>URL inválida</h1>
+  <p>
+    O endereço acessado não informa o id de nenhuma Landing Page. Digite abaixo o id de uma pessoa
+    cadastrada para acessar a Landing Page correspondente.
+  </p>
+
+  <form class="url-invalida__formulario" [formGroup]="formulario" (ngSubmit)="irParaId()">
+    <label for="campo-id">Id da Landing Page</label>
+    <input
+      #campoId
+      id="campo-id"
+      type="text"
+      inputmode="numeric"
+      formControlName="id"
+      [class.campo-invalido]="tentouSubmeter() && formulario.controls.id.invalid"
+    />
+    <button type="submit">Acessar</button>
+  </form>
+</main>

@@ -1,0 +1,60 @@
+@use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/flexbox' as flex;
+
+:host {
+  display: block;
+}
+
+.confirm-modal {
+  @include flex.flexbox($direction: column);
+
+  gap: 1.25rem;
+  width: min(90vw, 360px);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: var(--color-card);
+  color: var(--gray-text);
+  box-shadow: 0 1rem 2rem var(--card-box-shadow);
+
+  @include bp.responsivo('celular') {
+    padding: 1.25rem;
+  }
+}
+
+.confirm-modal__acoes {
+  @include flex.flexbox($justify: flex-end);
+
+  gap: 0.75rem;
+}
+
+.confirm-modal__cancelar,
+.confirm-modal__confirmar {
+  @include flex.flexbox($align: center, $inline: true);
+
+  gap: 0.375rem;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-family: var(--text-font-secundary);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.confirm-modal__cancelar {
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--dashed-line-color);
+}
+
+.confirm-modal__confirmar {
+  background: var(--hard-skill-border);
+  color: var(--white-text);
+}

@@ -1,0 +1,45 @@
+<form class="formulario-usuario" [formGroup]="formulario" (ngSubmit)="enviar()">
+  <div class="formulario-usuario__campo">
+    <label for="usuario-login">Usuário</label>
+    <input
+      #campoUsuario
+      id="usuario-login"
+      type="text"
+      formControlName="usuario"
+      autocomplete="username"
+      [class.campo-invalido]="tentouSubmeter() && formulario.controls.usuario.invalid"
+    />
+  </div>
+
+  <div class="formulario-usuario__campo">
+    <label for="usuario-senha">Senha</label>
+    <input
+      id="usuario-senha"
+      type="password"
+      formControlName="senha"
+      autocomplete="new-password"
+      [class.campo-invalido]="tentouSubmeter() && formulario.controls.senha.invalid"
+    />
+  </div>
+
+  <fieldset class="formulario-usuario__campo">
+    <legend>Role</legend>
+    @for (roleDisponivel of rolesDisponiveis(); track roleDisponivel) {
+      <label>
+        <input type="radio" formControlName="role" [value]="roleDisponivel" />
+        {{ roleDisponivel }}
+      </label>
+    }
+  </fieldset>
+
+  @if (erro(); as mensagemErro) {
+    <p role="alert" aria-live="assertive">{{ mensagemErro }}</p>
+  }
+
+  <div class="formulario-usuario__acoes">
+    <button type="submit">
+      {{ usuarioInicial() ? 'Salvar alterações' : 'Criar usuário' }}
+    </button>
+    <button type="button" (click)="aoCancelar()">Cancelar</button>
+  </div>
+</form>

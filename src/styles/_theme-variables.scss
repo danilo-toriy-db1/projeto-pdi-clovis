@@ -1,0 +1,63 @@
+:root {
+  --background-header: #6c558a;
+  --background-footer: #664c86;
+  --background-main: linear-gradient(
+    50deg,
+    rgba(190, 173, 204, 1) 0%,
+    rgba(147, 103, 171, 1) 27%,
+    rgba(148, 93, 212, 1) 55%,
+    rgba(227, 176, 255, 1) 94%
+  );
+  --color-card: #e2dedeea;
+  --card-edit: #ffffff;
+  --hover-edit: whitesmoke;
+  --text-font: 'Lato', sans-serif;
+  --text-font-secundary: 'Comic Neue', sans-serif;
+  --cursive-font: 'Dancing Script', sans-serif;
+  --white-text: #ffffff;
+  --gray-text: #2b2e2c;
+  --brilho-card: linear-gradient(45deg, transparent 35%, rgba(1, 1, 1, 0.25) 50%, transparent 70%);
+  --linha-card: linear-gradient(90deg, transparent, rgba(1, 1, 1, 0.5), transparent);
+  --card-box-shadow: rgba(28, 2, 58, 0.75);
+  --hard-skill-background: whitesmoke;
+  --soft-skill-background: whitesmoke;
+  --container-background: #d2baf8;
+  --hard-skill-border: #e73a3a;
+  --soft-skill-border: #021373;
+  --dashed-line-color: #616161;
+  --bolha-cor: rgba(255, 255, 255, 0.4);
+  --bolha-sombra: rgba(90, 50, 130, 0.15);
+  --duration-animation-linha-principal: 2s;
+  --duration-animation-linha-galho: 2s;
+  --duration-animation-fadeIn: 2s;
+  --duration-animation-pintar-card: 2s;
+  --duration-animation-brilho-login: 6s;
+  --duration-animation-bolha: 18s;
+  --delay-galho-animation: 2s;
+  --delay-fadeIn: 4s;
+  --delay-pintar-card: 4s;
+}
+
+.dark-mode {
+  --background-header: rgba(50, 10, 10, 0.2);
+  --background-footer: #1d0b35e0;
+  --background-main: linear-gradient(
+    50deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(12, 12, 79, 1) 27%,
+    rgba(70, 69, 133, 1) 55%,
+    rgba(35, 10, 64, 1) 94%
+  );
+  --color-card: #090816;
+  --card-edit: #413e68da;
+  --hover-edit: #383558;
+  --white-text: #eeeef067;
+  --gray-text: #c8d7eead;
+  --brilho-card: linear-gradient(45deg, transparent 35%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+  --linha-card: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  --card-box-shadow: rgba(23, 9, 39, 0.75);
+  --container-background: #0e051c;
+  --dashed-line-color: #ccc;
+  --bolha-cor: rgba(255, 255, 255, 0.12);
+  --bolha-sombra: rgba(255, 255, 255, 0.05);
+}

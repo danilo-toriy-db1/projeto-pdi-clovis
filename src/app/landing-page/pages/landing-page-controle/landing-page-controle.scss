@@ -1,0 +1,100 @@
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/brilho-card' as brilho;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--background-main);
+}
+
+.landing-page-controle {
+  @include flex.flexbox($justify: center);
+
+  padding: 1.5rem;
+}
+
+.landing-page-controle__cartao {
+  @include brilho.brilho-card;
+  @include flex.flexbox($align: center, $direction: column);
+
+  gap: 0.75rem;
+  max-width: 32rem;
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background: var(--color-card);
+  color: var(--gray-text);
+  text-align: center;
+}
+
+.landing-page-controle__dados {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1.5rem;
+  width: 100%;
+  text-align: left;
+
+  div {
+    @include flex.flexbox($justify: space-between);
+
+    gap: 0.5rem;
+  }
+
+  dt {
+    font-weight: bold;
+  }
+}
+
+.landing-page-controle__habilidades {
+  @include flex.flexbox($justify: center, $wrap: wrap);
+
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    @include flex.flexbox($align: center);
+
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
+    background: var(--hover-edit);
+  }
+}
+
+.landing-page-controle__paginacao {
+  @include flex.flexbox;
+
+  gap: 1rem;
+  margin-top: 0.5rem;
+
+  button {
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background: var(--background-header);
+    color: var(--white-text);
+    font-family: var(--text-font);
+
+    &:hover:not(:disabled) {
+      transform: scale(1.1);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--white-text);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.landing-page-controle__vazio {
+  color: var(--white-text);
+  text-align: center;
+}

@@ -1,0 +1,8 @@
+@if (entrada; as pessoaEncontrada) {
+  <app-header [paginas]="paginasLandingPage" />
+  <main class="landing-page-id">
+    <router-outlet />
+  </main>
+} @else {
+  <app-landing-page-nao-encontrada [mensagem]="mensagemNaoEncontrada" />
+}

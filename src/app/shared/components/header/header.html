@@ -1,0 +1,69 @@
+<ng-template #conteudoHeader>
+  @if (paginas().length > 0) {
+    <nav class="header__paginas" aria-label="Páginas do painel">
+      @for (pagina of paginas(); track pagina.rota) {
+        <a
+          class="header__pagina"
+          [routerLink]="pagina.rota"
+          routerLinkActive="header__pagina--ativa"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >{{ pagina.rotulo }}</a
+        >
+      }
+    </nav>
+  }
+
+  <button
+    type="button"
+    class="header__botao-tema"
+    [attr.aria-label]="rotuloAlternanciaTema()"
+    [title]="rotuloAlternanciaTema()"
+    (click)="alternarTema()"
+  >
+    <img [ngSrc]="temaEscuro() ? '/icons/light-mode.svg' : '/icons/dark-mode.svg'" width="20" height="20" alt="" />
+  </button>
+
+  @if (!reduzido() && estaAutenticado()) {
+    <button
+      type="button"
+      class="header__botao-logout"
+      aria-label="Sair da conta"
+      title="Sair da conta"
+      (click)="sair()"
+    >
+      <img ngSrc="/icons/logout-icon.svg" width="20" height="20" alt="" />
+      <span>Sair</span>
+    </button>
+  }
+</ng-template>
+
+<header class="header" [class.header--reduzido]="reduzido()">
+  <div class="header__acoes">
+    <ng-container *ngTemplateOutlet="conteudoHeader" />
+  </div>
+</header>
+
+<button
+  #hamburguerBtn
+  type="button"
+  class="header__hamburguer"
+  [attr.aria-label]="sidebarAberta() ? 'Fechar menu' : 'Abrir menu'"
+  [attr.aria-expanded]="sidebarAberta()"
+  aria-controls="header-sidebar"
+  (click)="alternarSidebar()"
+>
+  <img ngSrc="/icons/menu.svg" width="24" height="24" alt="" />
+</button>
+
+@if (sidebarAberta()) {
+  <div class="header__backdrop" (click)="fecharSidebar()"></div>
+}
+
+<aside
+  id="header-sidebar"
+  class="header__sidebar"
+  [class.header__sidebar--aberta]="sidebarAberta()"
+  [attr.aria-hidden]="!sidebarAberta()"
+>
+  <ng-container *ngTemplateOutlet="conteudoHeader" />
+</aside>

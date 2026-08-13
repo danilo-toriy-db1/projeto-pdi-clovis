@@ -1,0 +1,132 @@
+@use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/brilho-card' as brilho;
+
+:host {
+  display: block;
+  text-align: center;
+  color: var(--white-text);
+}
+
+.pagina-inicial-landing__hero-img {
+  @include flex.flexbox($justify: center, $align: center, $direction: row);
+
+  gap: 1.5rem;
+  padding: 1rem;
+
+  @include bp.responsivo('celular') {
+    flex-direction: column;
+  }
+}
+
+.pagina-inicial-landing__logo {
+  width: 10rem;
+  height: 10rem;
+
+  @include bp.responsivo('desktop') {
+    width: 9rem;
+    height: 9rem;
+  }
+}
+
+.pagina-inicial-landing__titulo {
+  margin: 0;
+  font-family: var(--cursive-font);
+
+  @include bp.responsivo('desktop') {
+    font-size: 5rem;
+  }
+
+  @include bp.responsivo('tablet') {
+    font-size: 5.25rem;
+  }
+
+  @include bp.responsivo('celular') {
+    font-size: 3.25rem;
+  }
+}
+
+.pagina-inicial-landing__hero-texto {
+  @include flex.flexbox($justify: center, $align: center, $direction: column);
+
+  gap: 0.5rem;
+  padding: 1.25rem;
+}
+
+.pagina-inicial-landing__boas-vindas {
+  margin: 0;
+  font-family: var(--text-font);
+
+  @include bp.responsivo('desktop') {
+    font-size: 2rem;
+  }
+
+  @include bp.responsivo('tablet') {
+    font-size: 2.25rem;
+  }
+
+  @include bp.responsivo('celular') {
+    font-size: 1.75rem;
+  }
+}
+
+.pagina-inicial-landing__descricao {
+  margin: 0;
+  font-family: var(--text-font-secundary);
+  line-height: 1.65rem;
+
+  @include bp.responsivo('desktop') {
+    max-width: 40rem;
+    margin-inline: auto;
+    font-size: 1.15rem;
+  }
+
+  @include bp.responsivo('tablet') {
+    font-size: 1.25rem;
+  }
+
+  @include bp.responsivo('celular') {
+    font-size: 1.1rem;
+  }
+}
+
+.pagina-inicial-landing__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+  text-align: left;
+
+  @include bp.responsivo('celular') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pagina-inicial-landing__card {
+  @include brilho.brilho-card($animado: true);
+  @include flex.flexbox($direction: column);
+
+  gap: 0.5rem;
+  text-decoration: none;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  background: var(--color-card);
+  color: var(--gray-text);
+  cursor: pointer;
+  font-family: var(--text-font);
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--white-text);
+    outline-offset: 2px;
+  }
+}
+
+.pagina-inicial-landing__card-titulo {
+  font-weight: bold;
+  font-size: 1.1rem;
+}

@@ -1,0 +1,30 @@
+<app-header [reduzido]="true" />
+
+<main class="login-page">
+  <div class="login-page__decoracao" aria-hidden="true">
+    <div class="login-page__brilho"></div>
+    @for (bolha of bolhas; track bolha) {
+      <span class="login-page__bolha" [style.--i]="bolha"></span>
+    }
+  </div>
+
+  <div class="login-page__conteudo">
+    <h1>Bem-vindo</h1>
+    <h2>à My Landing Page</h2>
+
+    <div class="login-page__botoes-entrada">
+      <button type="button" (click)="abrirModal(IntentLogin.LOGIN)">Login</button>
+      <button type="button" (click)="abrirModal(IntentLogin.PAINEL_ADMIN)">Painel Admin</button>
+      <button type="button" (click)="irParaLandingPage()">Acessar a Landing Page</button>
+    </div>
+
+  </div>
+</main>
+
+@if (intentAberto(); as intent) {
+  <div class="login-page__backdrop" (click)="fecharModal()">
+    <div class="login-page__modal-wrapper" (click)="$event.stopPropagation()">
+      <app-login-modal [intent]="intent" (fechar)="fecharModal()" />
+    </div>
+  </div>
+}

@@ -1,0 +1,41 @@
+<section class="pagina-inicial-admin">
+  <div class="pagina-inicial-admin__hero">
+    <div class="pagina-inicial-admin__hero-img">
+      <img
+        ngSrc="/logo.svg"
+        width="160"
+        height="160"
+        alt="Logo do projeto"
+        class="pagina-inicial-admin__logo"
+        priority
+      />
+      <h1 class="pagina-inicial-admin__titulo">Painel Administrativo</h1>
+    </div>
+
+    <div class="pagina-inicial-admin__hero-texto">
+      <h2 class="pagina-inicial-admin__boas-vindas">Seja bem-vindo(a)!</h2>
+      <p class="pagina-inicial-admin__descricao">
+        Gerencie o tema da aplicação, os dados da sua Landing Page e os usuários do sistema a partir
+        dos cards abaixo.
+      </p>
+    </div>
+  </div>
+
+  <div class="pagina-inicial-admin__cards">
+    <button type="button" class="pagina-inicial-admin__card" (click)="alternarTema()">
+      <img ngSrc="/icons/change-icon.svg" width="28" height="28" alt="" />
+      <span class="pagina-inicial-admin__card-titulo">Alternar tema</span>
+      <span>Troque entre o tema claro e o tema escuro da aplicação.</span>
+    </button>
+
+    <button type="button" class="pagina-inicial-admin__card" (click)="irParaLandingPage()">
+      <span class="pagina-inicial-admin__card-titulo">Voltar para a Landing Page</span>
+      <span>Veja a aplicação como um visitante a vê.</span>
+    </button>
+
+    <button type="button" class="pagina-inicial-admin__card" (click)="irParaEditarDados()">
+      <span class="pagina-inicial-admin__card-titulo">Editar Dados</span>
+      <span>Cadastre ou atualize os dados e as habilidades exibidos na Landing Page.</span>
+    </button>
+  </div>
+</section>

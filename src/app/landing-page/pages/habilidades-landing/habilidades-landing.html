@@ -1,0 +1,50 @@
+<section class="habilidades-landing">
+  <h1 class="habilidades-landing__titulo">Habilidades</h1>
+
+  <div class="habilidades-landing__arvore">
+    <span class="habilidades-landing__linha-central" aria-hidden="true"></span>
+
+    <div class="habilidades-landing__ramos">
+      <div class="habilidades-landing__ramo habilidades-landing__ramo--soft">
+        <span class="habilidades-landing__linha-ramo" aria-hidden="true"></span>
+        <ul class="habilidades-landing__lista">
+          @for (entrada of habilidadesSoft; track $index) {
+            <li
+              class="habilidades-landing__cartao habilidades-landing__cartao--soft"
+              [style.animation-delay]="$index * 150 + 'ms'"
+            >
+              <img [ngSrc]="'/icons/skills/' + entrada.habilidade.icone" width="32" height="32" alt="" />
+              <span>{{ entrada.habilidade.habilidade }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="habilidades-landing__ramo habilidades-landing__ramo--hard">
+        <span class="habilidades-landing__linha-ramo" aria-hidden="true"></span>
+        <ul class="habilidades-landing__lista">
+          @for (entrada of habilidadesHard; track $index) {
+            <li
+              class="habilidades-landing__cartao habilidades-landing__cartao--hard"
+              [style.animation-delay]="$index * 150 + 'ms'"
+            >
+              <img [ngSrc]="'/icons/skills/' + entrada.habilidade.icone" width="32" height="32" alt="" />
+              <span>{{ entrada.habilidade.habilidade }}</span>
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="habilidades-landing__acoes">
+    <button type="button" class="habilidades-landing__botao-adicionar">
+      <img [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'" width="18" height="18" alt="" />
+      Adicionar habilidade
+    </button>
+    <button type="button" class="habilidades-landing__botao-remover">
+      <img ngSrc="/icons/remove-icon.svg" width="18" height="18" alt="" />
+      Remover habilidade
+    </button>
+  </div>
+</section>

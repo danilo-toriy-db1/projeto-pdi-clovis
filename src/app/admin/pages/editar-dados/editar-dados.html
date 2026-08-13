@@ -1,0 +1,351 @@
+<section class="editar-dados">
+  <h1>Editar Dados</h1>
+
+  @if (visualizacao() === 'lista') {
+    <button type="button" class="editar-dados__criar" (click)="abrirCriacao()">
+      <img [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'" width="20" height="20" alt="" />
+      Criar nova entrada
+    </button>
+
+    <ul class="editar-dados__lista">
+      @for (entrada of pessoas(); track entrada.id) {
+        <li class="editar-dados__item">
+          <span>{{ entrada.dados.nome || 'Sem nome cadastrado' }} (id: {{ entrada.id }})</span>
+          <div class="editar-dados__item-acoes">
+            <button type="button" (click)="abrirEdicao(entrada)">
+              <img ngSrc="/icons/edit-icon.svg" width="16" height="16" alt="" />
+              Editar
+            </button>
+            <button type="button" (click)="pedirRemocaoEntrada(entrada)">
+              <img ngSrc="/icons/x-delete-icon.svg" width="16" height="16" alt="" />
+              Remover
+            </button>
+          </div>
+        </li>
+      } @empty {
+        <li>Nenhuma entrada cadastrada ainda.</li>
+      }
+    </ul>
+  } @else {
+    <div class="editar-dados__cards">
+      <article class="editar-dados__card">
+        <div class="editar-dados__card-cabecalho">
+          <h2>Sobre Mim</h2>
+          @if (ehSuper()) {
+            <button type="button" class="editar-dados__voltar" (click)="voltarParaLista()">
+              Voltar para a lista
+            </button>
+          }
+        </div>
+
+        <img
+          [src]="formulario.controls.imagem.value || '/logo.svg'"
+          width="120"
+          height="120"
+          alt="Foto de perfil"
+          class="editar-dados__imagem"
+        />
+
+        <dl class="editar-dados__resumo-pessoal">
+          <div>
+            <dt>Nome</dt>
+            <dd>{{ formulario.controls.nome.value || 'Sem nome cadastrado' }}</dd>
+          </div>
+          <div>
+            <dt>Idade</dt>
+            <dd>{{ formulario.controls.idade.value }}</dd>
+          </div>
+          <div>
+            <dt>Carreira</dt>
+            <dd>{{ formulario.controls.carreira.value || 'Não informado' }}</dd>
+          </div>
+          <div>
+            <dt>Profissão</dt>
+            <dd>{{ formulario.controls.profissao.value || 'Não informado' }}</dd>
+          </div>
+          <div>
+            <dt>Empresa</dt>
+            <dd>{{ formulario.controls.empresa.value || 'Não informado' }}</dd>
+          </div>
+        </dl>
+
+        <button
+          type="button"
+          class="editar-dados__editar-dados-pessoais"
+          (click)="abrirEdicaoDadosPessoais()"
+        >
+          <img ngSrc="/icons/edit-icon.svg" width="16" height="16" alt="" />
+          Editar dados pessoais
+        </button>
+
+        <section class="editar-dados__secao-descricao">
+          <h3>Descrição</h3>
+
+          <ul class="editar-dados__grade-descricao">
+            <li>
+              <button
+                type="button"
+                class="editar-dados__card-descricao editar-dados__card-descricao--biografia"
+                [class.campo-invalido]="
+                  tentouSubmeter() && formulario.controls.descricao.controls.biografia.invalid
+                "
+                (click)="abrirEdicaoDescricao('biografia')"
+              >
+                <h4>Biografia</h4>
+                <p>
+                  {{
+                    formulario.controls.descricao.controls.biografia.value ||
+                      'Sem Informações'
+                  }}
+                </p>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="editar-dados__card-descricao editar-dados__card-descricao--hobbies"
+                [class.campo-invalido]="
+                  tentouSubmeter() && formulario.controls.descricao.controls.hobbies.invalid
+                "
+                (click)="abrirEdicaoDescricao('hobbies')"
+              >
+                <h4>Hobbies</h4>
+                <p>
+                  {{
+                    formulario.controls.descricao.controls.hobbies.value ||
+                      'Sem Informações'
+                  }}
+                </p>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="editar-dados__card-descricao editar-dados__card-descricao--desgostos"
+                [class.campo-invalido]="
+                  tentouSubmeter() && formulario.controls.descricao.controls.desgostos.invalid
+                "
+                (click)="abrirEdicaoDescricao('desgostos')"
+              >
+                <h4>Desgostos</h4>
+                <p>
+                  {{
+                    formulario.controls.descricao.controls.desgostos.value ||
+                      'Sem Informações'
+                  }}
+                </p>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="editar-dados__card-descricao editar-dados__card-descricao--objetivos"
+                [class.campo-invalido]="
+                  tentouSubmeter() && formulario.controls.descricao.controls.objetivos.invalid
+                "
+                (click)="abrirEdicaoDescricao('objetivos')"
+              >
+                <h4>Objetivos</h4>
+                <p>
+                  {{
+                    formulario.controls.descricao.controls.objetivos.value ||
+                      'Sem Informações'
+                  }}
+                </p>
+              </button>
+            </li>
+          </ul>
+        </section>
+      </article>
+
+      @if (pessoaEmEdicao(); as entradaAtual) {
+        <article class="editar-dados__card">
+          <h2>Habilidades</h2>
+
+          <ul class="editar-dados__grade-habilidades">
+            @for (entradaHabilidade of habilidadesAtuais(); track $index) {
+              <li class="editar-dados__card-habilidade">
+                <button
+                  type="button"
+                  class="editar-dados__abrir-habilidade"
+                  [attr.aria-label]="'Editar habilidade ' + entradaHabilidade.habilidade.habilidade"
+                  (click)="abrirEdicaoHabilidade($index, entradaHabilidade)"
+                >
+                  <img
+                    [ngSrc]="'/icons/skills/' + entradaHabilidade.habilidade.icone"
+                    width="32"
+                    height="32"
+                    alt=""
+                    class="editar-dados__icone-habilidade"
+                  />
+                  <h3>{{ entradaHabilidade.habilidade.habilidade }}</h3>
+                  <span class="editar-dados__tipo-habilidade">{{
+                    entradaHabilidade.habilidade.tipo
+                  }}</span>
+                </button>
+              </li>
+            } @empty {
+              <li class="editar-dados__sem-habilidades">Nenhuma habilidade cadastrada ainda.</li>
+            }
+
+            <li class="editar-dados__card-habilidade editar-dados__card-habilidade--adicionar">
+              <button type="button" (click)="abrirCriacaoHabilidade()" aria-label="Adicionar habilidade">
+                <img
+                  [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'"
+                  width="32"
+                  height="32"
+                  alt=""
+                />
+                <span>Adicionar habilidade</span>
+              </button>
+            </li>
+          </ul>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (modalDadosPessoaisAberto()) {
+  <div class="editar-dados__overlay">
+    <app-edit-modal
+      [titulo]="'Editar dados pessoais'"
+      [feedback]="feedback()"
+      (fechar)="cancelarEdicaoDadosPessoais()"
+    >
+      <form class="editar-dados__formulario" [formGroup]="formulario" (ngSubmit)="salvar()">
+        <img
+          [src]="formulario.controls.imagem.value || '/logo.svg'"
+          width="120"
+          height="120"
+          alt="Foto de perfil"
+          class="editar-dados__imagem"
+        />
+
+        <div class="editar-dados__campo">
+          <label for="campo-nome">Nome</label>
+          <input
+            #campoNome
+            id="campo-nome"
+            type="text"
+            formControlName="nome"
+            [class.campo-invalido]="tentouSubmeter() && formulario.controls.nome.invalid"
+          />
+        </div>
+
+        <div class="editar-dados__campo">
+          <label for="campo-idade">Idade</label>
+          <input
+            id="campo-idade"
+            type="number"
+            formControlName="idade"
+            [class.campo-invalido]="tentouSubmeter() && formulario.controls.idade.invalid"
+          />
+        </div>
+
+        <div class="editar-dados__campo">
+          <label for="campo-carreira">Carreira</label>
+          <input
+            id="campo-carreira"
+            type="text"
+            formControlName="carreira"
+            [class.campo-invalido]="tentouSubmeter() && formulario.controls.carreira.invalid"
+          />
+        </div>
+
+        <div class="editar-dados__campo">
+          <label for="campo-profissao">Profissão</label>
+          <input
+            id="campo-profissao"
+            type="text"
+            formControlName="profissao"
+            [class.campo-invalido]="tentouSubmeter() && formulario.controls.profissao.invalid"
+          />
+        </div>
+
+        <div class="editar-dados__campo">
+          <label for="campo-empresa">Empresa</label>
+          <input
+            id="campo-empresa"
+            type="text"
+            formControlName="empresa"
+            [class.campo-invalido]="tentouSubmeter() && formulario.controls.empresa.invalid"
+          />
+        </div>
+
+        <div class="editar-dados__campo">
+          <label for="campo-imagem">Foto de perfil</label>
+          <input id="campo-imagem" type="file" accept="image/*" (change)="aoSelecionarImagem($event)" />
+        </div>
+
+        <button type="submit">
+          <img ngSrc="/icons/edit-icon.svg" width="16" height="16" alt="" />
+          Salvar
+        </button>
+      </form>
+    </app-edit-modal>
+  </div>
+}
+
+@if (modalHabilidadeAberto()) {
+  <div class="editar-dados__overlay">
+    <app-edit-modal
+      [titulo]="habilidadeEmEdicao() ? 'Editar habilidade' : 'Adicionar habilidade'"
+      [feedback]="feedbackHabilidade()"
+      (fechar)="cancelarEdicaoHabilidade()"
+    >
+      <app-formulario-habilidade
+        [habilidadeInicial]="habilidadeEmEdicao()?.habilidade ?? null"
+        (salvar)="salvarHabilidade($event)"
+        (cancelar)="cancelarEdicaoHabilidade()"
+      />
+      @if (habilidadeEmEdicao()) {
+        <button
+          type="button"
+          class="editar-dados__remover-habilidade"
+          (click)="pedirRemocaoHabilidadeEmEdicao()"
+        >
+          <img ngSrc="/icons/remove-icon.svg" width="16" height="16" alt="" />
+          Remover habilidade
+        </button>
+      }
+    </app-edit-modal>
+  </div>
+}
+
+@if (campoDescricaoEmEdicao(); as campo) {
+  <div class="editar-dados__overlay">
+    <app-edit-modal
+      [titulo]="rotulosDescricao[campo]"
+      [feedback]="feedbackDescricao()"
+      (fechar)="cancelarEdicaoDescricao()"
+    >
+      <app-formulario-descricao-about
+        [rotulo]="rotulosDescricao[campo]"
+        [valorInicial]="formulario.controls.descricao.controls[campo].value"
+        (salvar)="salvarDescricao($event)"
+        (cancelar)="cancelarEdicaoDescricao()"
+      />
+    </app-edit-modal>
+  </div>
+}
+
+@if (entradaParaRemover(); as entrada) {
+  <div class="editar-dados__overlay">
+    <app-confirm-modal
+      [mensagem]="'Remover a entrada de ' + (entrada.dados.nome || 'esta pessoa') + '?'"
+      (confirmar)="confirmarRemocaoEntrada()"
+      (cancelar)="cancelarRemocaoEntrada()"
+    />
+  </div>
+}
+
+@if (habilidadeParaRemover(); as alvo) {
+  <div class="editar-dados__overlay">
+    <app-confirm-modal
+      [mensagem]="'Remover a habilidade ' + alvo.habilidade.habilidade + '?'"
+      (confirmar)="confirmarRemocaoHabilidade()"
+      (cancelar)="cancelarRemocaoHabilidade()"
+    />
+  </div>
+}
