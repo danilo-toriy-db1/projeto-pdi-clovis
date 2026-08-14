@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ThemeService } from '../../../shared/services/theme.service/theme.service';
 
 @Component({
@@ -12,7 +12,8 @@ import { ThemeService } from '../../../shared/services/theme.service/theme.servi
 export class PaginaInicialAdmin {
   private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
-  private readonly activatedRoute = inject(ActivatedRoute);
+
+  readonly irParaEditarDados = output<void>();
 
   protected alternarTema(): void {
     this.themeService.alternarTema();
@@ -22,7 +23,7 @@ export class PaginaInicialAdmin {
     this.router.navigateByUrl('/landing-page');
   }
 
-  protected irParaEditarDados(): void {
-    this.router.navigate(['editar-dados'], { relativeTo: this.activatedRoute });
+  protected aoClicarEditarDados(): void {
+    this.irParaEditarDados.emit();
   }
 }

@@ -1,43 +1,47 @@
 <ng-template #conteudoHeader>
   @if (paginas().length > 0) {
     <nav class="header__paginas" aria-label="Páginas do painel">
-      @for (pagina of paginas(); track pagina.rota) {
-        <a
+      @for (pagina of paginas(); track pagina.id) {
+        <button
+          type="button"
           class="header__pagina"
-          [routerLink]="pagina.rota"
-          routerLinkActive="header__pagina--ativa"
-          [routerLinkActiveOptions]="{ exact: true }"
-          >{{ pagina.rotulo }}</a
+          [class.header__pagina--ativa]="pagina.id === paginaAtiva()"
+          [attr.aria-current]="pagina.id === paginaAtiva() ? 'page' : null"
+          (click)="selecionarPagina(pagina.id)"
         >
+          {{ pagina.rotulo }}
+        </button>
       }
     </nav>
   }
 
-  <button
-    type="button"
-    class="header__botao-tema"
-    [attr.aria-label]="rotuloAlternanciaTema()"
-    [title]="rotuloAlternanciaTema()"
-    (click)="alternarTema()"
-  >
-    <img [ngSrc]="temaEscuro() ? '/icons/light-mode.svg' : '/icons/dark-mode.svg'" width="20" height="20" alt="" />
-  </button>
-
-  @if (!reduzido() && estaAutenticado()) {
+  <div class="header__botoes">
     <button
       type="button"
-      class="header__botao-logout"
-      aria-label="Sair da conta"
-      title="Sair da conta"
-      (click)="sair()"
+      class="header__botao-tema"
+      [attr.aria-label]="rotuloAlternanciaTema()"
+      [title]="rotuloAlternanciaTema()"
+      (click)="alternarTema()"
     >
-      <img ngSrc="/icons/logout-icon.svg" width="20" height="20" alt="" />
-      <span>Sair</span>
+      <img [ngSrc]="temaEscuro() ? '/icons/light-mode.svg' : '/icons/dark-mode.svg'" width="20" height="20" alt="" />
     </button>
-  }
+
+    @if (!reduzido() && estaAutenticado()) {
+      <button
+        type="button"
+        class="header__botao-logout"
+        aria-label="Sair da conta"
+        title="Sair da conta"
+        (click)="sair()"
+      >
+        <img ngSrc="/icons/logout-icon.svg" width="20" height="20" alt="" />
+        <span>Sair</span>
+      </button>
+    }
+  </div>
 </ng-template>
 
-<header class="header" [class.header--reduzido]="reduzido()">
+<header class="header">
   <div class="header__acoes">
     <ng-container *ngTemplateOutlet="conteudoHeader" />
   </div>
@@ -64,6 +68,7 @@
   class="header__sidebar"
   [class.header__sidebar--aberta]="sidebarAberta()"
   [attr.aria-hidden]="!sidebarAberta()"
+  [attr.inert]="sidebarAberta() ? null : ''"
 >
   <ng-container *ngTemplateOutlet="conteudoHeader" />
 </aside>

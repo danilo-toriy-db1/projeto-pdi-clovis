@@ -2,7 +2,8 @@
 @use '../../../../styles/sem-preferencia-de-movimento-reduzido' as sem-movimento;
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
@@ -10,7 +11,7 @@
   @include flex.flexbox($justify: center, $align: center);
 
   position: relative;
-  min-height: calc(100vh - 5rem);
+  flex: 1;
   overflow: hidden;
 }
 

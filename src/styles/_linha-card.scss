@@ -1,0 +1,19 @@
+@use './breakpoints' as bp;
+
+@mixin linha-card($top-desktop: 0.05rem, $top-mobile: 0, $height: 0.08rem) {
+  &::before {
+    content: '';
+    position: absolute;
+    top: $top-desktop;
+    left: 0;
+    width: 100%;
+    height: $height;
+    background: var(--linha-card);
+    pointer-events: none;
+    z-index: 2;
+
+    @include bp.responsivo('celular') {
+      top: $top-mobile;
+    }
+  }
+}

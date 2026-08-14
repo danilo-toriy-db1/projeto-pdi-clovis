@@ -61,6 +61,7 @@ mantendo a mesma estrutura de nomes de variável entre os dois blocos.
     --hard-skill-border: #e73a3a;
     --soft-skill-border: #021373;
     --dashed-line-color: #616161;
+    --nav-ativo: #ffd166;
   }
 
   .dark-mode {
@@ -83,6 +84,7 @@ mantendo a mesma estrutura de nomes de variável entre os dois blocos.
     --card-box-shadow: rgba(23, 9, 39, 0.75);
     --container-background: #0e051c;
     --dashed-line-color: #ccc;
+    --nav-ativo: #ffd166;
   }
   ```
 
@@ -90,11 +92,11 @@ mantendo a mesma estrutura de nomes de variável entre os dois blocos.
   `--card-edit`, `--hover-edit`, `--white-text`, `--gray-text`,
   `--brilho-card`, `--linha-card`, `--card-box-shadow`,
   `--hard-skill-background`, `--soft-skill-background`,
-  `--container-background`, `--hard-skill-border`, `--soft-skill-border` e
-  `--dashed-line-color` podem ser ajustados livremente em cada bloco em busca
-  de melhor harmonia visual — desde que a mesma variável exista nos dois
-  blocos. Os valores de `--background-main` (claro e escuro), mostrados acima,
-  são fixos e não podem ser alterados.
+  `--container-background`, `--hard-skill-border`, `--soft-skill-border`,
+  `--dashed-line-color` e `--nav-ativo` podem ser ajustados livremente em cada
+  bloco em busca de melhor harmonia visual — desde que a mesma variável exista
+  nos dois blocos. Os valores de `--background-main` (claro e escuro),
+  mostrados acima, são fixos e não podem ser alterados.
 - Declare as fontes (`--text-font`: "Lato", `--text-font-secundary`: "Comic
   Neue", `--cursive-font`: "Dancing Script") e as durações/delays de animação
   (`--duration-animation-*`, `--delay-*`) no mesmo parcial, em `:root` — não

@@ -6,6 +6,7 @@ import { PaginaInicialAdmin } from './pagina-inicial-admin';
 
 describe('PaginaInicialAdmin', () => {
   let fixture: ComponentFixture<PaginaInicialAdmin>;
+  let componente: PaginaInicialAdmin;
   let router: Router;
 
   beforeEach(() => {
@@ -16,9 +17,9 @@ describe('PaginaInicialAdmin', () => {
       providers: [provideRouter([])],
     });
     fixture = TestBed.createComponent(PaginaInicialAdmin);
+    componente = fixture.componentInstance;
     router = TestBed.inject(Router);
     jest.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
-    jest.spyOn(router, 'navigate').mockResolvedValue(true);
     fixture.detectChanges();
   });
 
@@ -50,13 +51,13 @@ describe('PaginaInicialAdmin', () => {
     expect(router.navigateByUrl).toHaveBeenCalledWith('/landing-page');
   });
 
-  it('card 3 deve navegar para a rota relativa editar-dados', () => {
+  it('card 3 deve emitir irParaEditarDados, sem navegar de verdade', () => {
+    const spy = jest.fn();
+    componente.irParaEditarDados.subscribe(spy);
+
     cards()[2].click();
 
-    expect(router.navigate).toHaveBeenCalledWith(
-      ['editar-dados'],
-      expect.objectContaining({ relativeTo: expect.anything() }),
-    );
+    expect(spy).toHaveBeenCalled();
   });
 
   it('o ícone do card de alternar tema deve ser decorativo (alt vazio) e renderizar com src resolvido', () => {

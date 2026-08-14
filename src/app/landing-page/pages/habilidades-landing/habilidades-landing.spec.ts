@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { axe } from 'jest-axe';
 import { TipoHabilidade } from '../../../shared/models/enums/tipo-habilidade.enum';
 import { HabilidadeService } from '../../../shared/services/habilidade.service/habilidade.service';
@@ -8,17 +7,10 @@ import { HabilidadesLanding } from './habilidades-landing';
 describe('HabilidadesLanding', () => {
   function configurar(id: number): ComponentFixture<HabilidadesLanding> {
     TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      imports: [HabilidadesLanding],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: { parent: { snapshot: { paramMap: convertToParamMap({ id: String(id) }) } } },
-        },
-      ],
-    });
+    TestBed.configureTestingModule({ imports: [HabilidadesLanding] });
 
     const fixture = TestBed.createComponent(HabilidadesLanding);
+    fixture.componentRef.setInput('id', id);
     fixture.detectChanges();
     return fixture;
   }

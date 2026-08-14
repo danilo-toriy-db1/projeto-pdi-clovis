@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 import { axe } from 'jest-axe';
 import { IntentLogin } from '../../models/enums/intent-login.enum';
 import { AuthService } from '../../services/auth.service/auth.service';
@@ -163,8 +162,17 @@ describe('Header', () => {
   });
 
   describe('páginas navegáveis', () => {
-    function linksDePaginas(): HTMLAnchorElement[] {
+    function linksDePaginas(): HTMLButtonElement[] {
       return Array.from(fixture.nativeElement.querySelectorAll('.header .header__pagina'));
+    }
+
+    function configurarComPaginas(): void {
+      fixture.componentRef.setInput('paginas', [
+        { id: 'inicio', rotulo: 'Página Inicial' },
+        { id: 'editar-dados', rotulo: 'Editar Dados' },
+        { id: 'editar-usuarios', rotulo: 'Editar Usuários' },
+      ]);
+      fixture.detectChanges();
     }
 
     it('não deve exibir nenhuma navegação de páginas quando o input não é informado', () => {
@@ -173,16 +181,8 @@ describe('Header', () => {
       expect(fixture.nativeElement.querySelector('.header__paginas')).toBeNull();
     });
 
-    it('deve exibir um link por página recebida, com rótulo textual e a rota informada', () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({ imports: [Header], providers: [provideRouter([])] });
-      fixture = TestBed.createComponent(Header);
-      fixture.componentRef.setInput('paginas', [
-        { rotulo: 'Página Inicial', rota: '' },
-        { rotulo: 'Editar Dados', rota: 'editar-dados' },
-        { rotulo: 'Editar Usuários', rota: 'editar-usuarios' },
-      ]);
-      fixture.detectChanges();
+    it('deve exibir um botão por página recebida, com rótulo textual e o id informado', () => {
+      configurarComPaginas();
 
       const links = linksDePaginas();
       expect(links).toHaveLength(3);
@@ -191,6 +191,28 @@ describe('Header', () => {
         'Editar Dados',
         'Editar Usuários',
       ]);
+    });
+
+    it('deve emitir paginaSelecionada com o id da página clicada, sem navegar de verdade', () => {
+      configurarComPaginas();
+      const spy = jest.fn();
+      componente.paginaSelecionada.subscribe(spy);
+
+      linksDePaginas()[1].click();
+
+      expect(spy).toHaveBeenCalledWith('editar-dados');
+    });
+
+    it('deve destacar com uma classe (não sublinhado) apenas a página informada em paginaAtiva', () => {
+      configurarComPaginas();
+      fixture.componentRef.setInput('paginaAtiva', 'editar-dados');
+      fixture.detectChanges();
+
+      const links = linksDePaginas();
+      expect(links[0].classList.contains('header__pagina--ativa')).toBe(false);
+      expect(links[1].classList.contains('header__pagina--ativa')).toBe(true);
+      expect(links[1].getAttribute('aria-current')).toBe('page');
+      expect(links[0].getAttribute('aria-current')).toBeNull();
     });
   });
 });

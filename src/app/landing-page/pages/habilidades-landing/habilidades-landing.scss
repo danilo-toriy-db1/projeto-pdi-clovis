@@ -2,6 +2,45 @@
 @use '../../../../styles/flexbox' as flex;
 @use '../../../../styles/sem-preferencia-de-movimento-reduzido' as sem-movimento;
 
+@keyframes habilidades-fade-in {
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+@keyframes habilidades-linha-principal {
+  100% {
+    height: 98%;
+  }
+}
+
+@keyframes habilidades-linha-galho {
+  100% {
+    width: 3.8rem;
+  }
+}
+
+@keyframes habilidades-linha-galho-mobile {
+  100% {
+    width: 1.9rem;
+  }
+}
+
+@keyframes habilidades-pintar-card-soft {
+  100% {
+    background-color: var(--soft-skill-background);
+    border-color: var(--soft-skill-border);
+  }
+}
+
+@keyframes habilidades-pintar-card-hard {
+  100% {
+    background-color: var(--hard-skill-background);
+    border-color: var(--hard-skill-border);
+  }
+}
+
 :host {
   display: block;
   width: 100%;
@@ -23,15 +62,13 @@
 }
 
 .habilidades-landing__titulo {
+  margin: 0 0 2rem;
   font-family: var(--cursive-font);
   font-size: 3rem;
   text-align: center;
-  margin-bottom: 2rem;
 }
 
 .habilidades-landing__arvore {
-  @include flex.flexbox($align: center, $direction: column);
-
   position: relative;
   margin: 0 auto;
   padding: 2.5rem 0;
@@ -50,122 +87,197 @@
   @include bp.responsivo('celular') {
     width: 90vw;
   }
-}
 
-.habilidades-landing__linha-central {
-  display: block;
-  width: 2px;
-  height: 3rem;
-  background: repeating-linear-gradient(
-    to bottom,
-    var(--dashed-line-color) 0 6px,
-    transparent 6px 12px
-  );
-
-  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
-    animation: habilidades-linha-descer var(--duration-animation-linha-principal) ease-out;
-  }
-}
-
-@keyframes habilidades-linha-descer {
-  from {
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0.25rem;
     height: 0;
-  }
-  to {
-    height: 3rem;
+    border-right: 0.15rem dashed var(--dashed-line-color);
+    z-index: 1;
+
+    @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+      animation: habilidades-linha-principal var(--duration-animation-linha-principal) ease-in-out forwards;
+    }
   }
 }
 
-.habilidades-landing__ramos {
-  @include flex.flexbox($justify: center);
+.habilidades-landing__trilha {
+  @include flex.flexbox($direction: column);
 
-  gap: 3rem;
-  width: 100%;
-
-  @include bp.responsivo('celular') {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .habilidades-landing__ramo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
+  @include flex.flexbox($direction: row);
+
+  width: 50%;
+  position: relative;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
 }
 
-.habilidades-landing__linha-ramo {
-  display: block;
-  width: 100%;
-  max-width: 12rem;
-  height: 2px;
-  margin-bottom: 1rem;
-  background: repeating-linear-gradient(
-    to right,
-    var(--dashed-line-color) 0 6px,
-    transparent 6px 12px
-  );
+.habilidades-landing__ramo--soft {
+  justify-content: flex-end;
 
-  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
-    animation: habilidades-ramo-crescer var(--duration-animation-linha-galho) ease-out
-      var(--delay-galho-animation) backwards;
+  @include bp.responsivo('desktop') {
+    padding-right: 4rem;
+  }
+
+  @include bp.responsivo('tablet') {
+    padding-right: 4rem;
+  }
+
+  @include bp.responsivo('celular') {
+    padding-right: 2rem;
   }
 }
 
-@keyframes habilidades-ramo-crescer {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
+.habilidades-landing__ramo--hard {
+  justify-content: flex-start;
+  margin-left: 50%;
 
-.habilidades-landing__lista {
-  @include flex.flexbox($justify: center, $wrap: wrap);
+  @include bp.responsivo('desktop') {
+    padding-left: 4rem;
+  }
 
-  gap: 0.75rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @include bp.responsivo('tablet') {
+    padding-left: 4rem;
+  }
+
+  @include bp.responsivo('celular') {
+    padding-left: 2rem;
+  }
 }
 
 .habilidades-landing__cartao {
   @include flex.flexbox($align: center);
 
+  position: relative;
+  width: max-content;
   gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  box-sizing: border-box;
+  padding: 0.75rem 0.25rem;
   border-radius: 0.5rem;
+  border: 0.2rem solid transparent;
+  background: transparent;
+  color: var(--gray-text);
   font-family: var(--text-font);
-  opacity: 1;
+  visibility: hidden;
+  opacity: 0;
 
-  &--soft {
-    background: var(--soft-skill-background);
-    border: 1px solid var(--soft-skill-border);
-    color: var(--gray-text);
+  @include bp.responsivo('desktop') {
+    min-width: 11.5rem;
   }
 
-  &--hard {
-    background: var(--hard-skill-background);
-    border: 1px solid var(--hard-skill-border);
-    color: var(--gray-text);
+  @include bp.responsivo('tablet') {
+    min-width: 11.5rem;
   }
 
-  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
-    animation: habilidades-fade-in var(--duration-animation-fadeIn) ease-out var(--delay-fadeIn)
-      backwards;
+  @include bp.responsivo('celular') {
+    @include flex.flexbox($justify: center, $align: center);
+
+    min-width: 7.5rem;
+    padding: 0.5rem 0.15rem;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%);
+    border-top: 0.15rem dashed var(--dashed-line-color);
+
+    @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+      animation: habilidades-linha-galho var(--duration-animation-linha-galho) ease-in-out
+        calc(var(--delay-galho-animation) + var(--delay-item, 0ms)) forwards;
+    }
+
+    @include bp.responsivo('celular') {
+      @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+        animation-name: habilidades-linha-galho-mobile;
+      }
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: var(--dashed-line-color);
+    visibility: hidden;
+    opacity: 0;
+
+    @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+      animation: habilidades-fade-in var(--duration-animation-fadeIn) ease-in-out
+        calc(var(--delay-fadeIn) + var(--delay-item, 0ms)) forwards;
+    }
   }
 }
 
-@keyframes habilidades-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+.habilidades-landing__cartao--soft {
+  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+    animation: habilidades-fade-in var(--duration-animation-fadeIn) ease-in-out
+        calc(var(--delay-fadeIn) + var(--delay-item, 0ms)) forwards,
+      habilidades-pintar-card-soft var(--duration-animation-pintar-card) ease-in-out
+        calc(var(--delay-pintar-card) + var(--delay-item, 0ms)) forwards;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  &::before {
+    @include bp.responsivo('desktop') {
+      right: -4.2rem;
+    }
+
+    @include bp.responsivo('tablet') {
+      right: -4.2rem;
+    }
+
+    @include bp.responsivo('celular') {
+      right: -2.2rem;
+    }
+  }
+
+  &::after {
+    right: -0.5rem;
+    transform: translate(50%, -50%);
+  }
+}
+
+.habilidades-landing__cartao--hard {
+  @include sem-movimento.sem-preferencia-de-movimento-reduzido {
+    animation: habilidades-fade-in var(--duration-animation-fadeIn) ease-in-out
+        calc(var(--delay-fadeIn) + var(--delay-item, 0ms)) forwards,
+      habilidades-pintar-card-hard var(--duration-animation-pintar-card) ease-in-out
+        calc(var(--delay-pintar-card) + var(--delay-item, 0ms)) forwards;
+  }
+
+  &::before {
+    @include bp.responsivo('desktop') {
+      left: -4rem;
+    }
+
+    @include bp.responsivo('tablet') {
+      left: -4rem;
+    }
+
+    @include bp.responsivo('celular') {
+      left: -2rem;
+    }
+  }
+
+  &::after {
+    left: -0.5rem;
+    transform: translate(-50%, -50%);
   }
 }
 

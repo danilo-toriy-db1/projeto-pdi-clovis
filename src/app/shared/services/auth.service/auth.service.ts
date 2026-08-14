@@ -161,7 +161,7 @@ export class AuthService {
       case Role.ADMIN:
         return `/admin/${usuario.usuario}`;
       case Role.SUPER:
-        return '/admin/super';
+        return '/admin/control';
     }
   }
 

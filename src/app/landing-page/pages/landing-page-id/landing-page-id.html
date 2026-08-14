@@ -1,8 +1,26 @@
 @if (entrada; as pessoaEncontrada) {
-  <app-header [paginas]="paginasLandingPage" />
+  <app-header
+    [paginas]="paginasLandingPage"
+    [paginaAtiva]="vistaAtual()"
+    (paginaSelecionada)="selecionarVista($event)"
+  />
   <main class="landing-page-id">
-    <router-outlet />
+    @switch (vistaAtual()) {
+      @case ('sobre-mim') {
+        <app-sobre-mim [dados]="pessoaEncontrada.dados" />
+      }
+      @case ('habilidades') {
+        <app-habilidades-landing [id]="pessoaEncontrada.id" />
+      }
+      @case ('contato-e-sobre') {
+        <app-contato-e-sobre />
+      }
+      @default {
+        <app-pagina-inicial-landing />
+      }
+    }
   </main>
+  <app-footer />
 } @else {
   <app-landing-page-nao-encontrada [mensagem]="mensagemNaoEncontrada" />
 }

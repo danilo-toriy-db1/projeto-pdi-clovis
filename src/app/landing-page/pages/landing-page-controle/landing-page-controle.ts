@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { Footer } from '../../../shared/components/footer/footer';
 import { Header } from '../../../shared/components/header/header';
 import { Role } from '../../../shared/models/enums/role.enum';
 import { ArrayAboutModel } from '../../../shared/models/interfaces/about.model';
@@ -13,7 +14,7 @@ import {
 
 @Component({
   selector: 'app-landing-page-controle',
-  imports: [Header, NgOptimizedImage, LandingPageNaoEncontrada],
+  imports: [Header, Footer, NgOptimizedImage, LandingPageNaoEncontrada],
   templateUrl: './landing-page-controle.html',
   styleUrl: './landing-page-controle.scss',
 })

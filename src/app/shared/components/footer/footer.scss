@@ -1,0 +1,27 @@
+@use '../../../../styles/flexbox' as flex;
+
+:host {
+  display: block;
+}
+
+.footer {
+  @include flex.flexbox($align: center, $justify: center, $direction: column);
+
+  gap: 0.15rem;
+  padding: 0.6rem 1rem;
+  background: var(--background-footer);
+  color: var(--white-text);
+  text-align: center;
+  font-family: var(--text-font);
+}
+
+.footer__versao {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.footer__direitos {
+  margin: 0;
+  font-size: 0.75rem;
+}

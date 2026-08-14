@@ -2,12 +2,9 @@
   <div class="pagina-inicial-landing__hero">
     <div class="pagina-inicial-landing__hero-img">
       <img
-        ngSrc="/logo.svg"
-        width="160"
-        height="160"
+        src="/logo.jpg"
         alt="Logo do projeto"
         class="pagina-inicial-landing__logo"
-        priority
       />
       <h1 class="pagina-inicial-landing__titulo">My Landing Page</h1>
     </div>
@@ -34,6 +31,7 @@
     </a>
 
     <button type="button" class="pagina-inicial-landing__card" (click)="irParaEditarDados()">
+      <img ngSrc="/icons/add-icon.svg" width="28" height="28" alt="" />
       <span class="pagina-inicial-landing__card-titulo">Sua Landing Page</span>
       <span>Crie sua conta ou edite os dados já cadastrados no Admin.</span>
     </button>

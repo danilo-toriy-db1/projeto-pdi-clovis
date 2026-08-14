@@ -2,31 +2,31 @@
   <article class="sobre-mim__carteirinha">
     <div class="sobre-mim__coluna-pessoal">
       <img
-        [src]="dados.imagem"
+        [src]="dados().imagem"
         width="160"
         height="160"
-        alt="Foto de perfil de {{ dados.nome }}"
+        alt="Foto de perfil de {{ dados().nome }}"
         class="sobre-mim__imagem"
       />
 
-      <h1>{{ dados.nome }}</h1>
+      <h1>{{ dados().nome }}</h1>
 
       <dl class="sobre-mim__dados">
         <div>
           <dt>Idade</dt>
-          <dd>{{ dados.idade }}</dd>
+          <dd>{{ dados().idade }}</dd>
         </div>
         <div>
           <dt>Carreira</dt>
-          <dd>{{ dados.carreira }}</dd>
+          <dd>{{ dados().carreira }}</dd>
         </div>
         <div>
           <dt>Profissão</dt>
-          <dd>{{ dados.profissao }}</dd>
+          <dd>{{ dados().profissao }}</dd>
         </div>
         <div>
           <dt>Empresa</dt>
-          <dd>{{ dados.empresa }}</dd>
+          <dd>{{ dados().empresa }}</dd>
         </div>
       </dl>
     </div>
@@ -34,19 +34,19 @@
     <div class="sobre-mim__coluna-descricao">
       <div>
         <h2>Biografia</h2>
-        <p>{{ dados.descricao.biografia }}</p>
+        <p>{{ dados().descricao.biografia }}</p>
       </div>
       <div>
         <h2>Hobbies</h2>
-        <p>{{ dados.descricao.hobbies }}</p>
+        <p>{{ dados().descricao.hobbies }}</p>
       </div>
       <div>
         <h2>Desgostos</h2>
-        <p>{{ dados.descricao.desgostos }}</p>
+        <p>{{ dados().descricao.desgostos }}</p>
       </div>
       <div>
         <h2>Objetivos</h2>
-        <p>{{ dados.descricao.objetivos }}</p>
+        <p>{{ dados().descricao.objetivos }}</p>
       </div>
     </div>
   </article>

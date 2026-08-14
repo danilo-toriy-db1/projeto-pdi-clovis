@@ -1,6 +1,7 @@
 @use '../../../../styles/breakpoints' as bp;
 @use '../../../../styles/flexbox' as flex;
 @use '../../../../styles/brilho-card' as brilho;
+@use '../../../../styles/linha-card' as linha;
 
 :host {
   display: block;
@@ -21,7 +22,8 @@
 
 .pagina-inicial-landing__logo {
   width: 10rem;
-  height: 10rem;
+  height: 9rem;
+  border-radius: 1rem;
 
   @include bp.responsivo('desktop') {
     width: 9rem;
@@ -93,9 +95,8 @@
 .pagina-inicial-landing__cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
   margin-top: 1.5rem;
-  text-align: left;
+  overflow-x: clip;
 
   @include bp.responsivo('celular') {
     grid-template-columns: 1fr;
@@ -104,17 +105,29 @@
 
 .pagina-inicial-landing__card {
   @include brilho.brilho-card($animado: true);
+  @include linha.linha-card();
   @include flex.flexbox($direction: column);
 
+  box-sizing: border-box;
   gap: 0.5rem;
   text-decoration: none;
-  border: none;
+  text-align: center;
   border-radius: 0.75rem;
   padding: 1.25rem;
   background: var(--color-card);
   color: var(--gray-text);
   cursor: pointer;
   font-family: var(--text-font);
+  box-shadow: 0.6rem 0.5rem 1rem 0.5rem var(--card-box-shadow);
+  min-width: 95%;
+  min-height: 10rem;
+  margin: 0 2rem 1.75rem 1rem;
+  overflow: hidden;
+  transition: transform 200ms ease-in-out;
+
+  img {
+    align-self: center;
+  }
 
   &:hover {
     transform: scale(1.1);
@@ -123,6 +136,12 @@
   &:focus-visible {
     outline: 2px solid var(--white-text);
     outline-offset: 2px;
+  }
+
+  &:link,
+  &:visited {
+    color: var(--gray-text);
+    text-decoration: none;
   }
 }
 

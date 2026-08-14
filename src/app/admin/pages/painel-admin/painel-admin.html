@@ -1,5 +1,21 @@
-<app-header [paginas]="paginasPainel" />
+<app-header
+  [paginas]="paginasPainel"
+  [paginaAtiva]="vistaAtual()"
+  (paginaSelecionada)="selecionarVista($event)"
+/>
 
 <main class="painel-admin">
-  <router-outlet />
+  @switch (vistaAtual()) {
+    @case ('editar-dados') {
+      <app-editar-dados />
+    }
+    @case ('editar-usuarios') {
+      <app-editar-usuarios />
+    }
+    @default {
+      <app-pagina-inicial-admin (irParaEditarDados)="selecionarVista('editar-dados')" />
+    }
+  }
 </main>
+
+<app-footer />

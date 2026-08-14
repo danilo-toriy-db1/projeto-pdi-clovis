@@ -24,6 +24,8 @@
     padding: 0.5rem;
     border: 1px solid var(--dashed-line-color);
     border-radius: 0.375rem;
+    background: var(--card-edit);
+    color: var(--gray-text);
   }
 }
 
@@ -53,7 +55,7 @@
   border-radius: 0.375rem;
   padding: 0.5rem 0.75rem;
   background: var(--card-edit);
-  color: inherit;
+  color: var(--gray-text);
   font-family: var(--text-font);
 
   &:hover {

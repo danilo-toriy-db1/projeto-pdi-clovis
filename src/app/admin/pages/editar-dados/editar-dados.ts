@@ -3,7 +3,6 @@ import { NgOptimizedImage } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditModal, EditModalFeedback } from '../../../shared/components/edit-modal/edit-modal';
 import { ConfirmModal } from '../../../shared/components/confirm-modal/confirm-modal';
-import { FeedbackModal } from '../../../shared/components/feedback-modal/feedback-modal';
 import { Role } from '../../../shared/models/enums/role.enum';
 import {
   AboutModel,
@@ -52,7 +51,6 @@ interface HabilidadeSelecionada {
   imports: [
     ReactiveFormsModule,
     NgOptimizedImage,
-    FeedbackModal,
     ConfirmModal,
     EditModal,
     FormularioHabilidade,

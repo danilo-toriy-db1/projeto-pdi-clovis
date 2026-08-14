@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 import { TipoHabilidade } from '../../../shared/models/enums/tipo-habilidade.enum';
 import { ArrayHabilitiesModel } from '../../../shared/models/interfaces/habilities.model';
 import { HabilidadeService } from '../../../shared/services/habilidade.service/habilidade.service';
@@ -13,23 +12,16 @@ import { ThemeService } from '../../../shared/services/theme.service/theme.servi
   styleUrl: './habilidades-landing.scss',
 })
 export class HabilidadesLanding {
-  private readonly route = inject(ActivatedRoute);
   private readonly habilidadeService = inject(HabilidadeService);
   private readonly themeService = inject(ThemeService);
+  protected readonly tipoSoft = TipoHabilidade.SOFT;
   protected readonly temaEscuro = this.themeService.temaEscuro;
 
-  private readonly todasHabilidades: ArrayHabilitiesModel[] = this.resolverHabilidades();
+  readonly id = input.required<number>();
 
-  protected readonly habilidadesSoft = this.todasHabilidades.filter(
-    (entrada) => entrada.habilidade.tipo === TipoHabilidade.SOFT,
+  private readonly todasHabilidades = computed<ArrayHabilitiesModel[]>(() =>
+    this.habilidadeService.listarPorId(this.id()),
   );
 
-  protected readonly habilidadesHard = this.todasHabilidades.filter(
-    (entrada) => entrada.habilidade.tipo === TipoHabilidade.HARD,
-  );
-
-  private resolverHabilidades(): ArrayHabilitiesModel[] {
-    const idParam = this.route.parent?.snapshot.paramMap.get('id') ?? '';
-    return this.habilidadeService.listarPorId(Number(idParam));
-  }
+  protected readonly habilidadesTrilha = computed(() => this.todasHabilidades());
 }

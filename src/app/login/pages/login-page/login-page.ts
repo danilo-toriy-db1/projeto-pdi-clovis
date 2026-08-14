@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { Footer } from '../../../shared/components/footer/footer';
 import { Header } from '../../../shared/components/header/header';
 import { IntentLogin } from '../../../shared/models/enums/intent-login.enum';
 import { LoginModal } from '../../components/login-modal/login-modal';
 
 @Component({
   selector: 'app-login-page',
-  imports: [Header, LoginModal],
+  imports: [Header, Footer, LoginModal],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })

@@ -2,6 +2,7 @@
 
 @mixin brilho-card($animado: false) {
   position: relative;
+  z-index: 0;
   overflow: hidden;
 
   &::after {
@@ -10,22 +11,17 @@
     inset: 0;
     background: var(--brilho-card);
     pointer-events: none;
+    z-index: 0;
+    height: 12rem;
 
     @if $animado {
-      background-size: 250% 250%;
-      background-position: 150% 150%;
-
       @include sem-movimento.sem-preferencia-de-movimento-reduzido {
-        animation: brilho-card-passar 3s ease-in-out infinite alternate;
+        animation: brilho-card-passar 5s ease-in-out infinite;
       }
 
       @keyframes brilho-card-passar {
-        0% {
-          background-position: 150% 150%;
-        }
-        100% {
-          background-position: -50% -50%;
-        }
+        0% {transform: translateX(-120%) rotate(45deg);}
+        100% {transform: translateX(120%) rotate(45deg);}
       }
     }
   }

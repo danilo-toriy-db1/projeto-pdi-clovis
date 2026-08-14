@@ -28,8 +28,10 @@ export class PaginaInicialLanding {
       return;
     }
 
-    const segmentoUsuario = sessao!.role === Role.SUPER ? 'super' : sessao!.usuario;
-    this.router.navigateByUrl(`/admin/${segmentoUsuario}/editar-dados`);
+    const segmentoUsuario = sessao!.role === Role.SUPER ? 'control' : sessao!.usuario;
+    this.router.navigateByUrl(`/admin/${segmentoUsuario}`, {
+      state: { vistaInicial: 'editar-dados' },
+    });
   }
 
   protected alternarTema(): void {

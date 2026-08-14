@@ -98,14 +98,14 @@ describe('AuthService', () => {
       });
     });
 
-    it('deve autenticar role super com sucesso e redirecionar para /admin/super', async () => {
+    it('deve autenticar role super com sucesso e redirecionar para /admin/control', async () => {
       const servico = criarServico();
 
       const resultado = await servico.autenticar('superAdmin', '123Super', IntentLogin.LOGIN);
 
       expect(resultado).toEqual({
         resultado: ResultadoAutenticacao.SUCESSO,
-        destino: '/admin/super',
+        destino: '/admin/control',
       });
     });
 
@@ -129,7 +129,7 @@ describe('AuthService', () => {
 
       expect(resultado).toEqual({
         resultado: ResultadoAutenticacao.SUCESSO,
-        destino: '/admin/super',
+        destino: '/admin/control',
       });
     });
   });

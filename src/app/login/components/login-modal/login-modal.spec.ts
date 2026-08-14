@@ -116,13 +116,13 @@ describe('LoginModal', () => {
       expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/admin');
     });
 
-    it('TC-6: login bem-sucedido role super → redireciona a /admin/super', async () => {
+    it('TC-6: login bem-sucedido role super → redireciona a /admin/control', async () => {
       preencherLogin('superAdmin', '123Super');
 
       await enviarLogin();
 
       expect(estadoAtual()).toBe('sucesso');
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/super');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/control');
     });
 
     it('não deve chamar autenticação com o formulário vazio', async () => {
@@ -166,7 +166,7 @@ describe('LoginModal', () => {
       await enviarLogin();
 
       expect(estadoAtual()).toBe('sucesso');
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/super');
+      expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/control');
     });
   });
 

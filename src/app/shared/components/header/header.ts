@@ -1,17 +1,16 @@
-import { Component, ElementRef, effect, inject, input, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, effect, inject, input, output, signal, viewChild } from '@angular/core';
 import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service/auth.service';
 import { ThemeService } from '../../services/theme.service/theme.service';
 
 export interface PaginaHeader {
+  id: string;
   rotulo: string;
-  rota: string;
 }
 
 @Component({
   selector: 'app-header',
-  imports: [NgOptimizedImage, NgTemplateOutlet, RouterLink, RouterLinkActive],
+  imports: [NgOptimizedImage, NgTemplateOutlet],
   templateUrl: './header.html',
   styleUrl: './header.scss',
   host: {
@@ -25,6 +24,8 @@ export class Header {
 
   readonly reduzido = input(false);
   readonly paginas = input<PaginaHeader[]>([]);
+  readonly paginaAtiva = input<string>('');
+  readonly paginaSelecionada = output<string>();
 
   protected readonly sidebarAberta = signal(false);
   protected readonly temaEscuro = this.themeService.temaEscuro;
@@ -56,5 +57,9 @@ export class Header {
 
     this.sidebarAberta.set(false);
     this.hamburguerBtn()?.nativeElement.focus();
+  }
+
+  protected selecionarPagina(id: string): void {
+    this.paginaSelecionada.emit(id);
   }
 }

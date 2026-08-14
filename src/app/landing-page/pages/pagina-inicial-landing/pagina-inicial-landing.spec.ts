@@ -58,22 +58,26 @@ describe('PaginaInicialLanding', () => {
     expect(router.navigateByUrl).toHaveBeenCalledWith('/admin');
   });
 
-  it('card 2 com sessão admin navega direto para /admin/admin/editar-dados', async () => {
+  it('card 2 com sessão admin navega direto para /admin/admin, sinalizando a vista de editar dados', async () => {
     const authService = TestBed.inject(AuthService);
     await authService.autenticar('admin', '123@', IntentLogin.LOGIN);
 
     (cards()[1] as HTMLButtonElement).click();
 
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/admin/editar-dados');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/admin', {
+      state: { vistaInicial: 'editar-dados' },
+    });
   });
 
-  it('card 2 com sessão super navega direto para /admin/super/editar-dados', async () => {
+  it('card 2 com sessão super navega direto para /admin/control, sinalizando a vista de editar dados', async () => {
     const authService = TestBed.inject(AuthService);
     await authService.autenticar('superAdmin', '123Super', IntentLogin.LOGIN);
 
     (cards()[1] as HTMLButtonElement).click();
 
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/super/editar-dados');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/control', {
+      state: { vistaInicial: 'editar-dados' },
+    });
   });
 
   it('card 3 deve alternar o tema ativo da aplicação', () => {

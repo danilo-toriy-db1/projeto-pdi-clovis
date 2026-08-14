@@ -182,7 +182,7 @@ describe('EditarDados', () => {
 
         readAsDataURL(): void {
           this.result = 'data:image/png;base64,ZmFrZQ==';
-          this.onload?.call(this as unknown as FileReader, {} as ProgressEvent<FileReader>);
+          this.onload?.call(this as unknown as FileReader);
         }
       }
 

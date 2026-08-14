@@ -1,11 +1,12 @@
 import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Footer } from '../../../shared/components/footer/footer';
 import { Header } from '../../../shared/components/header/header';
 
 @Component({
   selector: 'app-url-invalida',
-  imports: [ReactiveFormsModule, Header],
+  imports: [ReactiveFormsModule, Header, Footer],
   templateUrl: './url-invalida.html',
   styleUrl: './url-invalida.scss',
 })

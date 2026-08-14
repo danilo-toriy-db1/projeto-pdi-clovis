@@ -13,8 +13,8 @@
   width: min(90vw, 360px);
   padding: 2.5rem 2rem 2rem;
   border-radius: 1.5rem;
-  background: var(--color-card);
-  color: var(--gray-text);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), var(--background-main);
+  color: var(--white-text);
   box-shadow: 0 1rem 2rem var(--card-box-shadow);
 
   @include bp.responsivo('celular') {
@@ -53,7 +53,6 @@ form {
 
   label {
     font-family: var(--text-font);
-    color: var(--gray-text);
   }
 
   input,
@@ -62,6 +61,8 @@ form {
     border: 1px solid var(--dashed-line-color);
     border-radius: 0.75rem;
     font-family: var(--text-font-secundary);
+    background: var(--card-edit);
+    color: var(--gray-text);
   }
 
   button[type='submit'] {

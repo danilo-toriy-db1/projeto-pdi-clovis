@@ -1,9 +1,11 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: var(--background-main);
 }
 
 .painel-admin {
+  flex: 1;
   padding: 1.5rem;
 }
