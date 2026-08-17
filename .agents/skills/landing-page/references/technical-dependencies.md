@@ -35,9 +35,11 @@
   `id` da pessoa exibida.
 - **Verificação de sessão/role do domínio Login / Autenticação** — usada pela
   rota `/landing-page/control` para conferir se a sessão ativa tem role
-  `super` antes de exibir a listagem de todas as Landing Pages. Sem essa
-  verificação, qualquer visitante poderia acessar a listagem completa de
-  Landing Pages, mesmo sem uma sessão `super` ativa.
+  `super` antes de exibir a listagem de todas as Landing Pages, e pela página
+  de Habilidades para decidir se abre o formulário de sugestão de habilidade
+  ou o aviso pedindo login. Sem essa verificação, qualquer visitante poderia
+  acessar a listagem completa de Landing Pages sem uma sessão `super` ativa,
+  ou enviar uma sugestão de habilidade sem estar autenticado.
 - **`NgOptimizedImage`** — usado para renderizar a imagem de perfil
   (`AboutModel.imagem`) na página "Sobre Mim" e os ícones SVG de cada
   habilidade na página de Habilidades, já que são assets estáticos servidos

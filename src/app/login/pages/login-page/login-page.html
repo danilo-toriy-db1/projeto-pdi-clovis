@@ -15,7 +15,9 @@
     <div class="login-page__botoes-entrada">
       <button type="button" (click)="abrirModal(IntentLogin.LOGIN)">Login</button>
       <button type="button" (click)="abrirModal(IntentLogin.PAINEL_ADMIN)">Painel Admin</button>
-      <button type="button" (click)="irParaLandingPage()">Acessar a Landing Page</button>
+      <button type="button" class="login-page__botao-landing" (click)="irParaLandingPage()">
+        Acessar a Landing Page
+      </button>
     </div>
 
   </div>
@@ -24,7 +26,11 @@
 @if (intentAberto(); as intent) {
   <div class="login-page__backdrop" (click)="fecharModal()">
     <div class="login-page__modal-wrapper" (click)="$event.stopPropagation()">
-      <app-login-modal [intent]="intent" (fechar)="fecharModal()" />
+      <app-login-modal
+        [intent]="intent"
+        [acessoNegadoInicial]="acessoNegadoInicial()"
+        (fechar)="fecharModal()"
+      />
     </div>
   </div>
 }

@@ -1,5 +1,7 @@
 @use '../../../../styles/breakpoints' as bp;
 @use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/hover-scale' as escala;
+@use '../../../../styles/overlay' as sobreposicao;
 @use '../../../../styles/sem-preferencia-de-movimento-reduzido' as sem-movimento;
 
 @keyframes habilidades-fade-in {
@@ -289,6 +291,7 @@
 
   button {
     @include flex.flexbox($justify: space-between, $align: center, $direction: row, $inline: true);
+    @include escala.hover-scale;
 
     gap: 0.5rem;
     border: none;
@@ -311,8 +314,17 @@
       padding: 0.5rem 1rem;
     }
 
-    &:hover {
-      transform: scale(1.1);
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+
+      &:hover {
+        transform: none;
+      }
     }
   }
+}
+
+.habilidades-landing__overlay {
+  @include sobreposicao.overlay(30);
 }

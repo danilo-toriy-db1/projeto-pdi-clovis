@@ -18,7 +18,7 @@ Estados visuais, em sequência a partir do envio do formulário:
 2. **Usuário Não Encontrado** — nem `usuario` nem `senha` correspondem a um registro válido em `localStorage`.
 3. **Credenciais Inválidas** — exatamente um dos dois campos corresponde a um registro válido e o outro não.
 4. **Acesso Negado** — `usuario`/`senha` corretos, role `user`, e o modal foi aberto pelo botão "Painel Admin"; a sessão ainda é gravada (as credenciais são válidas), mas nenhuma navegação para o painel ocorre.
-5. **Sucesso** — `usuario`/`senha` corretos, em qualquer outra combinação de role e botão: grava a sessão e redireciona para `/landing-page` (`user`), `/admin/{id}` (`admin`, sendo `{id}` o identificador da própria conta) ou `/admin/super` (`super`).
+5. **Sucesso** — `usuario`/`senha` corretos, em qualquer outra combinação de role e botão: grava a sessão e redireciona para `/landing-page` (`user`), `/admin/{id}` (`admin`, sendo `{id}` o identificador da própria conta) ou `/admin/control` (`super`).
 
 Sub-fluxo de criação de conta, acessível a partir do mesmo modal, em qualquer um dos dois botões de entrada: campos `usuario`, `senha` e seleção do tipo de conta (`user` ou `admin` — a opção `super` nunca é oferecida por este caminho).
 

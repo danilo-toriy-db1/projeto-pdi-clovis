@@ -1,5 +1,7 @@
 @use '../../../../styles/breakpoints' as bp;
 @use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/hover-scale' as escala;
+@use '../../../../styles/focus-ring' as foco;
 
 :host {
   display: block;
@@ -30,6 +32,8 @@
 .confirm-modal__cancelar,
 .confirm-modal__confirmar {
   @include flex.flexbox($align: center, $inline: true);
+  @include escala.hover-scale;
+  @include foco.focus-ring;
 
   gap: 0.375rem;
   border: none;
@@ -37,15 +41,6 @@
   padding: 0.75rem 1.5rem;
   cursor: pointer;
   font-family: var(--text-font-secundary);
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
 }
 
 .confirm-modal__cancelar {

@@ -1,7 +1,9 @@
 <app-header
-  [paginas]="paginasPainel"
+  [paginas]="paginasPainel()"
   [paginaAtiva]="vistaAtual()"
+  [contadorNotificacoes]="contadorNotificacoes()"
   (paginaSelecionada)="selecionarVista($event)"
+  (abrirNotificacoes)="abrirNotificacoes()"
 />
 
 <main class="painel-admin">
@@ -12,8 +14,17 @@
     @case ('editar-usuarios') {
       <app-editar-usuarios />
     }
+    @case ('solicitacoes') {
+      <app-solicitacoes-habilidade />
+    }
+    @case ('notificacoes') {
+      <app-notificacoes-admin />
+    }
     @default {
-      <app-pagina-inicial-admin (irParaEditarDados)="selecionarVista('editar-dados')" />
+      <app-pagina-inicial-admin
+        (irParaEditarDados)="selecionarVista('editar-dados')"
+        (irParaEditarUsuarios)="selecionarVista('editar-usuarios')"
+      />
     }
   }
 </main>

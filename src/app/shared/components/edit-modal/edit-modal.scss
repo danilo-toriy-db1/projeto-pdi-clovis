@@ -1,5 +1,6 @@
 @use '../../../../styles/flexbox' as flex;
 @use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/botao-icone-circular' as icone;
 
 :host {
   display: block;
@@ -22,6 +23,12 @@
   }
 }
 
+.edit-modal--largo {
+  width: min(95vw, 60rem);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
 .edit-modal__cabecalho {
   @include flex.flexbox($align: center, $justify: space-between);
 
@@ -34,23 +41,7 @@
 }
 
 .edit-modal__fechar {
-  @include flex.flexbox($align: center, $justify: center, $inline: true);
-
-  border: none;
-  border-radius: 50%;
-  padding: 0.5rem;
-  cursor: pointer;
-  background: transparent;
-  color: inherit;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
+  @include icone.botao-icone-circular;
 }
 
 .edit-modal__conteudo {

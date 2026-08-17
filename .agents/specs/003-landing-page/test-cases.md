@@ -92,7 +92,7 @@
 1. Com uma sessão `super` já ativa (login prévio com `usuario` `superAdmin`/`senha` `123Super`), acesse `/landing-page/0`.
 2. Clique no card 2 da Página Inicial.
 
-**Expected:** a navegação segue direto para `/admin/super/editar-dados`.
+**Expected:** a navegação segue direto para `/admin/control/editar-dados`.
 
 ### TC-13 (recommended) — sessão role `user` ativa, o card 2 é bloqueado como se não houvesse sessão
 

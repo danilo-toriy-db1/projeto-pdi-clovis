@@ -1,5 +1,6 @@
-import { Component, ElementRef, effect, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, ElementRef, computed, effect, inject, input, output, signal, viewChild } from '@angular/core';
 import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
+import { Role } from '../../models/enums/role.enum';
 import { AuthService } from '../../services/auth.service/auth.service';
 import { ThemeService } from '../../services/theme.service/theme.service';
 
@@ -25,12 +26,18 @@ export class Header {
   readonly reduzido = input(false);
   readonly paginas = input<PaginaHeader[]>([]);
   readonly paginaAtiva = input<string>('');
+  readonly contadorNotificacoes = input<number>(0);
   readonly paginaSelecionada = output<string>();
+  readonly abrirNotificacoes = output<void>();
 
   protected readonly sidebarAberta = signal(false);
   protected readonly temaEscuro = this.themeService.temaEscuro;
   protected readonly rotuloAlternanciaTema = this.themeService.rotuloAlternancia;
   protected readonly estaAutenticado = this.authService.estaAutenticado;
+  protected readonly podeVerNotificacoes = computed(() => {
+    const role = this.authService.role();
+    return role === Role.ADMIN || role === Role.SUPER;
+  });
 
   constructor() {
     effect(() => {

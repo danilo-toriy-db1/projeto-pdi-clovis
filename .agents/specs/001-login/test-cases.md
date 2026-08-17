@@ -55,14 +55,14 @@
 
 **Expected:** o modal exibe "Carregando" por 3 segundos e, em seguida, "Sucesso"; a sessão (usuário `admin`, role `admin`) é gravada em `localStorage` e a navegação segue para `/admin/{id}`, sendo `{id}` o identificador vinculado à conta `admin` usada no teste.
 
-### TC-6 (mandatory) — login bem-sucedido de conta role `super` → redireciona a `/admin/super`
+### TC-6 (mandatory) — login bem-sucedido de conta role `super` → redireciona a `/admin/control`
 
 1. Acesse `/login`.
 2. Clique no botão "Login".
 3. No modal, preencha `usuario` com `superAdmin` e `senha` com `123Super`.
 4. Envie o formulário.
 
-**Expected:** o modal exibe "Carregando" por 3 segundos e, em seguida, "Sucesso"; a sessão (usuário `superAdmin`, role `super`) é gravada em `localStorage` e a navegação segue para `/admin/super`.
+**Expected:** o modal exibe "Carregando" por 3 segundos e, em seguida, "Sucesso"; a sessão (usuário `superAdmin`, role `super`) é gravada em `localStorage` e a navegação segue para `/admin/control`.
 
 ## Story 2 — Painel Admin e `AuthGuard`
 
@@ -91,7 +91,7 @@
 3. No modal, preencha `usuario` com `superAdmin` e `senha` com `123Super`.
 4. Envie o formulário.
 
-**Expected:** o modal exibe "Carregando" por 3 segundos e, em seguida, "Sucesso"; a sessão é gravada e a navegação segue para `/admin/super`, o mesmo resultado do TC-6.
+**Expected:** o modal exibe "Carregando" por 3 segundos e, em seguida, "Sucesso"; a sessão é gravada e a navegação segue para `/admin/control`, o mesmo resultado do TC-6.
 
 ### TC-10 (mandatory) — sessão role `user` navega direto para `/admin/{id}` pela URL → `AuthGuard` bloqueia
 
@@ -99,11 +99,11 @@
 
 **Expected:** o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado" do TC-7; a rota `/admin/{id}` não é exibida.
 
-### TC-11 (mandatory) — sessão role `user` navega direto para `/admin/super` pela URL → `AuthGuard` bloqueia
+### TC-11 (mandatory) — sessão role `user` navega direto para `/admin/control` pela URL → `AuthGuard` bloqueia
 
-1. Com a sessão de role `user` ativa (estabelecida pelo TC-4), digite diretamente a URL `/admin/super` na barra de endereço do navegador e navegue até ela.
+1. Com a sessão de role `user` ativa (estabelecida pelo TC-4), digite diretamente a URL `/admin/control` na barra de endereço do navegador e navegue até ela.
 
-**Expected:** o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado"; a rota `/admin/super` não é exibida.
+**Expected:** o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado"; a rota `/admin/control` não é exibida.
 
 ### TC-12 (mandatory) — visitante sem sessão ativa navega direto para `/admin/{id}` pela URL → `AuthGuard` bloqueia
 
@@ -111,11 +111,11 @@
 
 **Expected:** o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado"; a rota `/admin/{id}` não é exibida.
 
-### TC-13 (recommended) — visitante sem sessão ativa navega direto para `/admin/super` pela URL → `AuthGuard` bloqueia
+### TC-13 (recommended) — visitante sem sessão ativa navega direto para `/admin/control` pela URL → `AuthGuard` bloqueia
 
-1. Sem nenhuma sessão ativa, digite diretamente a URL `/admin/super` na barra de endereço do navegador e navegue até ela.
+1. Sem nenhuma sessão ativa, digite diretamente a URL `/admin/control` na barra de endereço do navegador e navegue até ela.
 
-**Expected:** o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado"; a rota `/admin/super` não é exibida.
+**Expected:** o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado"; a rota `/admin/control` não é exibida.
 
 ## Story 3 — Criação de conta
 

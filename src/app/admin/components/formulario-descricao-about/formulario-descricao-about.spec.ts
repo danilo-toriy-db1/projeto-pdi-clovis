@@ -61,6 +61,7 @@ describe('FormularioDescricaoAbout', () => {
 
     expect(spy).not.toHaveBeenCalled();
     expect(document.activeElement).toBe(campoValor());
+    expect(fixture.nativeElement.textContent).toContain('Biografia é um campo obrigatório.');
   });
 
   it('deve emitir cancelar ao clicar em cancelar', () => {
@@ -73,7 +74,7 @@ describe('FormularioDescricaoAbout', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('deve emitir salvar com string vazia e limpar o campo ao clicar em resetar, mesmo com texto preenchido', () => {
+  it('deve pedir confirmação antes de resetar, sem emitir salvar até confirmar', () => {
     criarComponente();
     fixture.componentRef.setInput('valorInicial', 'Texto existente');
     fixture.detectChanges();
@@ -83,18 +84,43 @@ describe('FormularioDescricaoAbout', () => {
     botaoPorTexto('Resetar').click();
     fixture.detectChanges();
 
-    expect(spy).toHaveBeenCalledWith('');
-    expect(campoValor().value).toBe('');
+    expect(spy).not.toHaveBeenCalled();
+    expect(fixture.nativeElement.querySelector('app-confirm-modal')).not.toBeNull();
+    expect(campoValor().value).toBe('Texto existente');
   });
 
-  it('deve permitir resetar mesmo quando o campo está vazio e nunca foi submetido (não exige valor válido)', () => {
+  it('deve emitir salvar com string vazia e limpar o campo somente após confirmar o reset', () => {
     criarComponente();
+    fixture.componentRef.setInput('valorInicial', 'Texto existente');
+    fixture.detectChanges();
     const spy = jest.fn();
     componente.salvar.subscribe(spy);
 
     botaoPorTexto('Resetar').click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('.confirm-modal__confirmar').click();
+    fixture.detectChanges();
 
     expect(spy).toHaveBeenCalledWith('');
+    expect(campoValor().value).toBe('');
+    expect(fixture.nativeElement.querySelector('app-confirm-modal')).toBeNull();
+  });
+
+  it('não deve emitir salvar nem alterar o campo quando o reset é cancelado', () => {
+    criarComponente();
+    fixture.componentRef.setInput('valorInicial', 'Texto existente');
+    fixture.detectChanges();
+    const spy = jest.fn();
+    componente.salvar.subscribe(spy);
+
+    botaoPorTexto('Resetar').click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('.confirm-modal__cancelar').click();
+    fixture.detectChanges();
+
+    expect(spy).not.toHaveBeenCalled();
+    expect(campoValor().value).toBe('Texto existente');
+    expect(fixture.nativeElement.querySelector('app-confirm-modal')).toBeNull();
   });
 
   it('não deve ter violações de acessibilidade', async () => {

@@ -161,6 +161,82 @@ describe('Header', () => {
     expect(botaoLogout()).toBeNull();
   });
 
+  describe('botão de notificações', () => {
+    function botaoNotificacoes(): HTMLButtonElement | null {
+      return fixture.nativeElement.querySelector('.header__botao-notificacoes');
+    }
+
+    it('não deve exibir o botão de notificações sem sessão ativa', () => {
+      fixture.detectChanges();
+
+      expect(botaoNotificacoes()).toBeNull();
+    });
+
+    it('não deve exibir o botão de notificações para a role user', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('user', '123U', IntentLogin.LOGIN);
+      fixture.detectChanges();
+
+      expect(botaoNotificacoes()).toBeNull();
+    });
+
+    it('deve exibir o botão de notificações para a role admin', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('admin', '123@', IntentLogin.PAINEL_ADMIN);
+      fixture.detectChanges();
+
+      expect(botaoNotificacoes()).not.toBeNull();
+    });
+
+    it('deve exibir o botão de notificações para a role super', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('superAdmin', '123Super', IntentLogin.PAINEL_ADMIN);
+      fixture.detectChanges();
+
+      expect(botaoNotificacoes()).not.toBeNull();
+    });
+
+    it('nunca deve exibir o botão de notificações na variante reduzida', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('admin', '123@', IntentLogin.PAINEL_ADMIN);
+      fixture.componentRef.setInput('reduzido', true);
+      fixture.detectChanges();
+
+      expect(botaoNotificacoes()).toBeNull();
+    });
+
+    it('não deve exibir o contador quando não houver notificações pendentes', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('admin', '123@', IntentLogin.PAINEL_ADMIN);
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.header__badge-notificacoes')).toBeNull();
+    });
+
+    it('deve exibir o contador recebido quando houver notificações pendentes', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('admin', '123@', IntentLogin.PAINEL_ADMIN);
+      fixture.componentRef.setInput('contadorNotificacoes', 3);
+      fixture.detectChanges();
+
+      expect(
+        fixture.nativeElement.querySelector('.header__badge-notificacoes').textContent.trim(),
+      ).toBe('3');
+    });
+
+    it('deve emitir abrirNotificacoes ao clicar no botão', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('admin', '123@', IntentLogin.PAINEL_ADMIN);
+      fixture.detectChanges();
+      const spy = jest.fn();
+      componente.abrirNotificacoes.subscribe(spy);
+
+      botaoNotificacoes()?.click();
+
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
   describe('páginas navegáveis', () => {
     function linksDePaginas(): HTMLButtonElement[] {
       return Array.from(fixture.nativeElement.querySelectorAll('.header .header__pagina'));

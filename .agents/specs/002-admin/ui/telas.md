@@ -2,7 +2,7 @@
 
 ## Shell `PainelAdmin`
 
-Renderiza o `Header` compartilhado com as 3 páginas navegáveis (Página Inicial, Editar Dados, Editar Usuários) e um `<router-outlet>` para a página ativa. As rotas relativas usadas pelo `Header` (`''`, `editar-dados`, `editar-usuarios`) são as mesmas em ambos os ramos (`/admin/:id` e `/admin/super`), então o mesmo shell serve os dois contextos sem duplicação.
+Renderiza o `Header` compartilhado com as 3 páginas navegáveis (Página Inicial, Editar Dados, Editar Usuários) e um `<router-outlet>` para a página ativa. As rotas relativas usadas pelo `Header` (`''`, `editar-dados`, `editar-usuarios`) são as mesmas em ambos os ramos (`/admin/:id` e `/admin/control`), então o mesmo shell serve os dois contextos sem duplicação.
 
 ## Página Inicial do Admin
 

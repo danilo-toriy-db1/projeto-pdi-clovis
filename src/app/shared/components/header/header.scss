@@ -1,5 +1,8 @@
 @use '../../../../styles/breakpoints' as bp;
 @use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/hover-scale' as escala;
+@use '../../../../styles/focus-ring' as foco;
+@use '../../../../styles/overlay' as sobreposicao;
 
 :host {
   display: block;
@@ -37,6 +40,8 @@
 }
 
 .header__pagina {
+  @include foco.focus-ring(var(--white-text));
+
   border: none;
   background: transparent;
   color: inherit;
@@ -55,11 +60,6 @@
     color: #2b1f47;
     font-weight: bold;
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--white-text);
-    outline-offset: 2px;
-  }
 }
 
 .header__botoes {
@@ -69,10 +69,14 @@
 }
 
 .header__botao-tema,
-.header__botao-logout {
+.header__botao-logout,
+.header__botao-notificacoes {
   @include flex.flexbox($align: center, $inline: true);
+  @include escala.hover-scale;
+  @include foco.focus-ring(var(--white-text));
 
   gap: 0.375rem;
+  position: relative;
   border: none;
   background: transparent;
   color: inherit;
@@ -80,18 +84,29 @@
   padding: 0.5rem;
   border-radius: 999px;
   font-family: var(--text-font);
+}
 
-  &:hover {
-    transform: scale(1.1);
-  }
+.header__badge-notificacoes {
+  @include flex.flexbox($align: center, $justify: center);
 
-  &:focus-visible {
-    outline: 2px solid var(--white-text);
-    outline-offset: 2px;
-  }
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--hard-skill-border);
+  color: var(--white-text);
+  font-size: 0.65rem;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .header__hamburguer {
+  @include escala.hover-scale;
+  @include foco.focus-ring(var(--white-text));
+
   display: none;
   border: none;
   background: var(--background-header);
@@ -99,15 +114,6 @@
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 999px;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--white-text);
-    outline-offset: 2px;
-  }
 
   @include bp.responsivo('celular') {
     @include flex.flexbox($inline: true);
@@ -120,10 +126,7 @@
 }
 
 .header__backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 15;
+  @include sobreposicao.overlay(15, 0.4, false);
 
   @include bp.responsivo('tablet-e-acima') {
     display: none;

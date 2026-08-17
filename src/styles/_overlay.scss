@@ -1,0 +1,12 @@
+@use 'flexbox' as flex;
+
+@mixin overlay($z-index, $alpha: 0.4, $centralizado: true) {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, $alpha);
+  z-index: $z-index;
+
+  @if $centralizado {
+    @include flex.flexbox($align: center, $justify: center);
+  }
+}

@@ -6,13 +6,19 @@ import { EditModal, EditModalFeedback } from './edit-modal';
 @Component({
   imports: [EditModal],
   template: `
-    <app-edit-modal [titulo]="'Editar habilidade'" [feedback]="feedback()" (fechar)="fechado = true">
+    <app-edit-modal
+      [titulo]="'Editar habilidade'"
+      [feedback]="feedback()"
+      [largo]="largo()"
+      (fechar)="fechado = true"
+    >
       <p>Conteúdo de teste</p>
     </app-edit-modal>
   `,
 })
 class HospedeiraTeste {
   readonly feedback = input<EditModalFeedback | null>(null);
+  readonly largo = input(false);
   fechado = false;
 }
 
@@ -64,6 +70,20 @@ describe('EditModal', () => {
 
     const resultados = await axe(fixture.nativeElement);
     expect(resultados).toHaveNoViolations();
+  });
+
+  it('não deve aplicar a variante larga por padrão', () => {
+    criarComponente();
+
+    expect(fixture.nativeElement.querySelector('.edit-modal--largo')).toBeNull();
+  });
+
+  it('deve aplicar a variante larga quando largo for true', () => {
+    criarComponente();
+    fixture.componentRef.setInput('largo', true);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.edit-modal--largo')).not.toBeNull();
   });
 
   describe('estado de feedback (carregando/sucesso)', () => {

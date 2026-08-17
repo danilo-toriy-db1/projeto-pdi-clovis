@@ -5,11 +5,8 @@ import { TipoHabilidade } from '../../../shared/models/enums/tipo-habilidade.enu
 import { HabilitiesModel } from '../../../shared/models/interfaces/habilities.model';
 import { HabilidadeService } from '../../../shared/services/habilidade.service/habilidade.service';
 import { PessoaService } from '../../../shared/services/pessoa.service/pessoa.service';
+import { autenticarComo } from '../../../shared/testing/autenticar-como';
 import { EditarDados } from './editar-dados';
-
-function autenticarComo(usuario: string, role: Role): void {
-  localStorage.setItem('login.sessao', JSON.stringify({ usuario, role }));
-}
 
 describe('EditarDados', () => {
   let fixture: ComponentFixture<EditarDados>;
@@ -130,6 +127,58 @@ describe('EditarDados', () => {
       const campoNome: HTMLInputElement = fixture.nativeElement.querySelector('#campo-nome');
       expect(document.activeElement).toBe(campoNome);
       expect(campoNome.classList.contains('campo-invalido')).toBe(true);
+      expect(fixture.nativeElement.textContent).toContain('Nome é um campo obrigatório.');
+    });
+
+    it('deve salvar os dados pessoais mesmo com a descrição ainda vazia (não bloqueia por campos de outro modal)', async () => {
+      abrirModalDadosPessoais();
+      fixture.nativeElement.querySelector('#campo-nome').value = 'Fulano';
+      fixture.nativeElement.querySelector('#campo-nome').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-idade').value = '30';
+      fixture.nativeElement.querySelector('#campo-idade').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-carreira').value = 'TI';
+      fixture.nativeElement.querySelector('#campo-carreira').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-profissao').value = 'Dev';
+      fixture.nativeElement.querySelector('#campo-profissao').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-empresa').value = 'DB1';
+      fixture.nativeElement.querySelector('#campo-empresa').dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+
+      const salvarPromise = componente['salvar']();
+      jest.advanceTimersByTime(600);
+      await salvarPromise;
+      fixture.detectChanges();
+
+      const pessoaService = TestBed.inject(PessoaService);
+      expect(pessoaService.listarTodas()[0].dados.nome).toBe('Fulano');
+      jest.advanceTimersByTime(1200);
+    });
+
+    it('deve exibir "{campo} é um campo obrigatório." nos cards de descrição ainda vazios após tentar salvar', async () => {
+      abrirModalDadosPessoais();
+      fixture.nativeElement.querySelector('#campo-nome').value = 'Fulano';
+      fixture.nativeElement.querySelector('#campo-nome').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-idade').value = '30';
+      fixture.nativeElement.querySelector('#campo-idade').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-carreira').value = 'TI';
+      fixture.nativeElement.querySelector('#campo-carreira').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-profissao').value = 'Dev';
+      fixture.nativeElement.querySelector('#campo-profissao').dispatchEvent(new Event('input'));
+      fixture.nativeElement.querySelector('#campo-empresa').value = 'DB1';
+      fixture.nativeElement.querySelector('#campo-empresa').dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+
+      const salvarPromise = componente['salvar']();
+      jest.advanceTimersByTime(600);
+      await salvarPromise;
+      jest.advanceTimersByTime(1200);
+      fixture.detectChanges();
+
+      const cardBiografia = fixture.nativeElement.querySelector(
+        '.editar-dados__card-descricao--biografia',
+      );
+      expect(cardBiografia.classList.contains('campo-invalido')).toBe(true);
+      expect(cardBiografia.textContent).toContain('Biografia é um campo obrigatório.');
     });
 
     it('deve abrir o modal de dados pessoais ao clicar no botão "Editar dados pessoais"', () => {
@@ -425,6 +474,8 @@ describe('EditarDados', () => {
           .querySelectorAll('.formulario-descricao-about__acoes button[type="button"]')[0]
           .click();
         fixture.detectChanges();
+        fixture.nativeElement.querySelector('.confirm-modal__confirmar').click();
+        fixture.detectChanges();
 
         await jest.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
@@ -550,6 +601,42 @@ describe('EditarDados', () => {
 
       expect(pessoaService.buscarPorId(entrada.id)).toBeUndefined();
       expect(habilidadeService.listarPorId(entrada.id)).toEqual([]);
+    });
+
+    it('deve abrir a edição de uma entrada existente em um modal largo, mantendo a lista visível por trás', () => {
+      TestBed.configureTestingModule({ imports: [EditarDados] });
+      const pessoaService = TestBed.inject(PessoaService);
+      const entrada = pessoaService.criarNova({
+        nome: 'Pessoa Z',
+        idade: 20,
+        carreira: '',
+        profissao: '',
+        empresa: '',
+        imagem: '',
+        descricao: { biografia: '', hobbies: '', desgostos: '', objetivos: '' },
+      });
+      fixture = TestBed.createComponent(EditarDados);
+      componente = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('app-edit-modal')).toBeNull();
+
+      fixture.nativeElement.querySelector('.editar-dados__abrir-entrada').click();
+      fixture.detectChanges();
+
+      const modal = fixture.nativeElement.querySelector('app-edit-modal .edit-modal--largo');
+      expect(modal).not.toBeNull();
+      expect(fixture.nativeElement.querySelector('#edit-modal-titulo').textContent).toContain(
+        'Pessoa Z',
+      );
+      expect(fixture.nativeElement.querySelectorAll('.editar-dados__item')).toHaveLength(1);
+
+      fixture.nativeElement.querySelector('.edit-modal__fechar').click();
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('app-edit-modal')).toBeNull();
+      expect(fixture.nativeElement.querySelectorAll('.editar-dados__item')).toHaveLength(1);
+      expect(pessoaService.buscarPorId(entrada.id)).not.toBeUndefined();
     });
   });
 });

@@ -8,6 +8,10 @@
       formControlName="habilidade"
       [class.campo-invalido]="tentouSubmeter() && formulario.controls.habilidade.invalid"
     />
+    <app-erro-campo
+      rotulo="Nome da habilidade"
+      [mostrar]="tentouSubmeter() && formulario.controls.habilidade.invalid"
+    />
   </div>
 
   <div class="formulario-habilidade__campo">

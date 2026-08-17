@@ -59,6 +59,20 @@ describe('PessoaService', () => {
     });
   });
 
+  describe('resolverUsuarioAdmin', () => {
+    it('deve devolver o usuario vinculado ao id de uma pessoa', () => {
+      const entrada = servico.resolverEntradaAdmin('admin');
+
+      expect(servico.resolverUsuarioAdmin(entrada.id)).toBe('admin');
+    });
+
+    it('deve devolver null quando o id não pertence a nenhum admin vinculado', () => {
+      const entrada = servico.criarNova(dadosDeTeste());
+
+      expect(servico.resolverUsuarioAdmin(entrada.id)).toBeNull();
+    });
+  });
+
   describe('salvar', () => {
     it('deve atualizar os dados da entrada existente mantendo o id', () => {
       const entrada = servico.resolverEntradaAdmin('admin');

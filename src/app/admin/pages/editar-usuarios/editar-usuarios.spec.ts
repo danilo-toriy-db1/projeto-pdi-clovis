@@ -2,11 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { axe } from 'jest-axe';
 import { Role } from '../../../shared/models/enums/role.enum';
 import { AuthService } from '../../../shared/services/auth.service/auth.service';
+import { autenticarComo } from '../../../shared/testing/autenticar-como';
 import { EditarUsuarios } from './editar-usuarios';
-
-function autenticarComo(usuario: string, role: Role): void {
-  localStorage.setItem('login.sessao', JSON.stringify({ usuario, role }));
-}
 
 describe('EditarUsuarios', () => {
   let fixture: ComponentFixture<EditarUsuarios>;

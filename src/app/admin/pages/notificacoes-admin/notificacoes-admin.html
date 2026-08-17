@@ -1,0 +1,56 @@
+<section class="notificacoes-admin">
+  <h1>Notificações</h1>
+
+  <div class="notificacoes-admin__card-principal">
+    <section class="notificacoes-admin__secao">
+      <h2>Notificações do sistema</h2>
+      <p class="notificacoes-admin__legenda">
+        Registro do fluxo de sugestão de habilidade entre um usuário e o admin de destino.
+      </p>
+
+      <ul class="notificacoes-admin__grade">
+        @for (item of notificacoesSistema(); track item.id) {
+          <li
+            class="notificacoes-admin__card"
+            [class.notificacoes-admin__card--novo]="ehRecente(item)"
+          >
+            @if (item.status; as status) {
+              <span class="notificacoes-admin__status notificacoes-admin__status--{{ status }}">
+                {{ rotulosStatus[status] }}
+              </span>
+            }
+            <h3>{{ item.notificacao.titulo }}</h3>
+            <p>{{ item.notificacao.descricao }}</p>
+            <p class="notificacoes-admin__partes">
+              {{ item.usuarioOrigem }} → {{ item.usuarioDestino ?? 'sem destino' }}
+            </p>
+          </li>
+        } @empty {
+          <li class="notificacoes-admin__vazio">Nenhuma notificação do sistema registrada.</li>
+        }
+      </ul>
+    </section>
+
+    <section class="notificacoes-admin__secao">
+      <h2>Notificações de log</h2>
+      <p class="notificacoes-admin__legenda">
+        Registro de eventos como novos usuários cadastrados e novas Landing Pages criadas.
+      </p>
+
+      <ul class="notificacoes-admin__grade">
+        @for (item of notificacoesLog(); track item.id) {
+          <li
+            class="notificacoes-admin__card"
+            [class.notificacoes-admin__card--novo]="ehRecente(item)"
+          >
+            <h3>{{ item.notificacao.titulo }}</h3>
+            <p>{{ item.notificacao.descricao }}</p>
+            <p class="notificacoes-admin__partes">Usuário: {{ item.usuarioOrigem }}</p>
+          </li>
+        } @empty {
+          <li class="notificacoes-admin__vazio">Nenhuma notificação de log registrada.</li>
+        }
+      </ul>
+    </section>
+  </div>
+</section>

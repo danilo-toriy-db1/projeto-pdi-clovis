@@ -1,0 +1,44 @@
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/campo-formulario' as campo;
+
+:host {
+  display: block;
+}
+
+.formulario-solicitacao-habilidade {
+  @include flex.flexbox($align: flex-end, $wrap: wrap);
+
+  gap: 0.75rem;
+}
+
+.formulario-solicitacao-habilidade__campo {
+  @include flex.flexbox($direction: column);
+
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.875rem;
+  }
+
+  input,
+  select {
+    @include campo.campo-formulario;
+  }
+}
+
+.formulario-solicitacao-habilidade__acoes {
+  @include flex.flexbox;
+
+  gap: 0.5rem;
+
+  button {
+    @include flex.flexbox($align: center, $inline: true);
+
+    gap: 0.375rem;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+  }
+}

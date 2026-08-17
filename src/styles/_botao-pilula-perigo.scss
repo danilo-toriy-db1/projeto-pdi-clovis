@@ -1,0 +1,14 @@
+@use 'hover-scale' as escala;
+
+@mixin botao-pilula-perigo {
+  @include escala.hover-scale;
+
+  border: 1px solid var(--hard-skill-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background: transparent;
+  color: var(--hard-skill-border);
+  font-family: var(--text-font);
+  font-size: 0.875rem;
+}

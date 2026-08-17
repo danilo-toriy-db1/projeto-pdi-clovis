@@ -6,11 +6,11 @@ description: >
   exclusiva à role `super`, as páginas de URL inválida e de Landing Page não
   encontrada, o header público com as 4 páginas (Página Inicial, Sobre Mim,
   Habilidades, Contato e Sobre), os 3 cards e as animações da Página Inicial
-  e de Habilidades, e o consumo dos dados dinâmicos de
-  `AboutModel`/`HabilitiesModel` do domínio Admin. Use ao criar, revisar ou
-  alterar a Landing Page, o header público, a Página Inicial, Sobre Mim,
-  Habilidades, Contato e Sobre, `/landing-page/:id`, `/landing-page/control`,
-  ou as páginas de URL inválida/não encontrada.
+  e de Habilidades, o fluxo de sugestão de habilidade, e o consumo dos dados
+  dinâmicos de `AboutModel`/`HabilitiesModel` do domínio Admin. Use ao criar,
+  revisar ou alterar a Landing Page, o header público, a Página Inicial,
+  Sobre Mim, Habilidades, Contato e Sobre, `/landing-page/:id`,
+  `/landing-page/control`, ou as páginas de URL inválida/não encontrada.
 metadata:
   author: clovis-cli
   type: domain-skill
@@ -105,11 +105,20 @@ dados que exibe — apenas os consome e os renderiza.
   `TipoHabilidade.HARD`. Cada habilidade é exibida como um cartão individual,
   com animação fade-in ao aparecer e um ícone SVG local próprio (não
   determinado pelo tipo da habilidade). Abaixo do card central há botões de
-  adicionar e de remover habilidade, alinhados em linha (row); a
-  funcionalidade completa desses botões ainda não foi detalhada pela fonte
-  de negócio e fica fora do escopo desta documentação até ser fornecida.
-  Esses botões a princípio devem apenas existir. Funcionalidade dele será
-  fornecida depois. Essa página deve ser a terceira no header.
+  adicionar e de remover habilidade, alinhados em linha (row). Qualquer sessão
+  autenticada — role `user`, `admin` ou `super`, dono da página ou não — pode
+  clicar em um desses botões para abrir um formulário de sugestão de
+  habilidade (nome, tipo e, para remoção, a habilidade existente a remover);
+  sem sessão ativa, o clique exibe um aviso pedindo login antes de prosseguir.
+  A sugestão enviada fica pendente até que o admin dono da Landing Page
+  (identificado pelo vínculo usuário↔id do domínio Admin) a aceite ou rejeite
+  pela tela "Solicitações de Habilidade" do painel Admin; aceitar aplica a
+  alteração de habilidade (adição ou remoção) imediatamente, enquanto
+  rejeitar apenas descarta a sugestão sem alterar nenhuma habilidade. Toda
+  sugestão enviada, aceita ou rejeitada gera uma notificação de log do tipo
+  sistema no domínio Admin, identificando o usuário que sugeriu e o admin de
+  destino — ver a seção de Notificações da skill `admin`. Essa página deve
+  ser a terceira no header.
 - **Página "Sobre Mim"** exibe os dados de `AboutModel` da pessoa
   correspondente ao `id` da rota: nome, idade, carreira, profissão, empresa,
   a imagem de perfil (campo `imagem` de `AboutModel`, usando a logo do
@@ -152,6 +161,13 @@ dados que exibe — apenas os consome e os renderiza.
 - **Navegação entre páginas:** a partir de qualquer uma das 4 páginas, o
   visitante navega pelas demais através dos links do header, sem perder o
   `id` da rota quando presente.
+- **Sugerir uma habilidade (página de Habilidades):** uma sessão autenticada
+  clica em "Adicionar habilidade" ou "Remover habilidade" e preenche o
+  formulário de sugestão; ao enviar, a sugestão fica pendente para o admin
+  dono da Landing Page visitada decidir. Sem sessão ativa, o clique exibe um
+  aviso pedindo login em vez de abrir o formulário. Isso vale igualmente para
+  uma sessão `admin` ou `super` visitando a Landing Page de outro admin (ou
+  mesmo a própria) — nenhuma role tem tratamento diferente aqui.
 - **Ir para o repositório do projeto (card 1 da Página Inicial):** ao
   clicar, o visitante é direcionado ao repositório GitHub do projeto.
 - **Criar uma nova pessoa/Landing Page (card 2 da Página Inicial):** sem

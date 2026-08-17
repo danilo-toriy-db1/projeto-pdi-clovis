@@ -76,6 +76,18 @@ Dados" do Admin.
   anterior a exclusão, que alerte o usuário sobre a exclusão ser permanente, e
   somente após o usuário confirmar que a exclusão deve ser feita. Isso para serve
   para evitar exclusões acidentais.
+- Além da criação de uma conta nova, existe uma terceira forma de uma conta
+  passar a ter role `admin`: uma sessão já autenticada com role `user` pode se
+  autopromover a `admin`, mudando a role da própria conta já existente (sem
+  criar um novo registro de usuário e sem exigir senha novamente), ao acionar
+  o card "Sua Landing Page" da Página Inicial pública da Landing Page. Essa
+  autopromoção também atualiza a sessão ativa em `localStorage` quando o
+  usuário promovido é o mesmo da sessão corrente.
+- Toda criação de conta (pela tela "Editar Usuários" ou pelo modal de login) e
+  toda autopromoção a `admin` geram um registro de notificação de log no
+  domínio Admin ("Novo usuário cadastrado" e "Nova Landing Page criada",
+  respectivamente), usado apenas como histórico consultado pela role `super` —
+  ver a seção de Notificações da skill `admin`.
 - As senhas dos usuários são armazenadas em `localStorage` de forma
   criptografada, usando `Encrypter.js`, para não expor as credenciais em texto
   puro no armazenamento do navegador.
@@ -121,7 +133,7 @@ Dados" do Admin.
     válidas), mas nenhuma navegação para o painel administrativo ocorre. O
     mesmo feedback de "Acesso Negado" é apresentado quando uma sessão já
     ativa com role `user` navega diretamente, pela URL, para uma rota do
-    painel administrativo (`/admin/{id}` ou `/admin/super`) — nesse caso o
+    painel administrativo (`/admin/{id}` ou `/admin/control`) — nesse caso o
     bloqueio é do `AuthGuard`, que redireciona de volta para `/login` com o
     parâmetro de consulta `acessoNegado=true`.
   - **Credenciais Inválidas** — quando exatamente um dos dois campos (usuário
@@ -146,7 +158,7 @@ Dados" do Admin.
   `super`), a navegação é redirecionada de acordo com a role autenticada:
   para `/landing-page` quando a role é `user`, para `/admin/{id}` quando a
   role é `admin` — sendo `{id}` o identificador vinculado à própria conta
-  desse admin —, e para `/admin/super` quando a role é `super`. Quando o
+  desse admin —, e para `/admin/control` quando a role é `super`. Quando o
   login foi feito pelo botão "Painel Admin" com role `user`, nenhuma dessas
   navegações ocorre — o feedback é "Acesso Negado" (ver acima).
 - **Logout:** o botão de logout, exibido no header apenas quando há sessão
@@ -170,6 +182,15 @@ Dados" do Admin.
   exceção obrigatória da conta `superAdmin` (role `super`), que nunca pode ser
   excluída por nenhum meio. Posteriormente haverá uma regra que irá alterar essa,
   tenha isso em registro.
+- **Autopromoção a admin pela Landing Page:** uma sessão com role `user` que
+  clica no card "Sua Landing Page" da Página Inicial pública da Landing Page
+  tem a própria conta promovida de `user` para `admin` — o mesmo identificador
+  de usuário passa a ter role `admin`, sem passar por um novo cadastro. Em
+  seguida, a navegação segue direto para `/admin/{usuario}` (o próprio
+  identificador do usuário promovido) com a tela "Editar Dados" já
+  selecionada, permitindo que ele cadastre os dados da sua nova Landing Page
+  imediatamente. Sessões que já têm role `admin` ou `super` que clicam nesse
+  mesmo card apenas navegam para o próprio painel, sem nenhuma promoção.
 
 ## Entidades e dados
 

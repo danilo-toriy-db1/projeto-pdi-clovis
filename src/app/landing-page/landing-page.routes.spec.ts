@@ -25,7 +25,7 @@ describe('LANDING_PAGE_ROUTES', () => {
     });
   });
 
-  it('preserva o id da rota ao navegar entre as 4 páginas pelo header', async () => {
+  it('troca de vista pelo header sem navegar de verdade, preservando o id na URL', async () => {
     const pessoaService = TestBed.inject(PessoaService);
     const entrada = pessoaService.criarNova(dadosDeTeste());
     const router = TestBed.inject(Router);
@@ -42,13 +42,16 @@ describe('LANDING_PAGE_ROUTES', () => {
     };
 
     await clicarEm('Habilidades');
-    expect(router.url).toBe(`/${entrada.id}/habilidades`);
+    expect(router.url).toBe(`/${entrada.id}`);
+    expect(harness.routeNativeElement!.querySelector('app-habilidades-landing')).not.toBeNull();
 
     await clicarEm('Contato e Sobre');
-    expect(router.url).toBe(`/${entrada.id}/contato-e-sobre`);
+    expect(router.url).toBe(`/${entrada.id}`);
+    expect(harness.routeNativeElement!.querySelector('app-contato-e-sobre')).not.toBeNull();
 
     await clicarEm('Página Inicial');
     expect(router.url).toBe(`/${entrada.id}`);
+    expect(harness.routeNativeElement!.querySelector('app-pagina-inicial-landing')).not.toBeNull();
   });
 
   it('rota control é resolvida como a rota exclusiva do super, nunca como um id "control"', async () => {

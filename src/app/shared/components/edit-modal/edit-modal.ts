@@ -20,6 +20,7 @@ export class EditModal {
 
   readonly titulo = input.required<string>();
   readonly feedback = input<EditModalFeedback | null>(null);
+  readonly largo = input(false);
   readonly fechar = output<void>();
 
   protected readonly temaEscuro = this.themeService.temaEscuro;

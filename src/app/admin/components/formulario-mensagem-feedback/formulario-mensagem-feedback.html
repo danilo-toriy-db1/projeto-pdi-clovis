@@ -1,0 +1,21 @@
+<form class="formulario-mensagem-feedback" [formGroup]="formulario" (ngSubmit)="aoEnviar()">
+  <div class="formulario-mensagem-feedback__campo">
+    <label for="feedback-mensagem">Mensagem</label>
+    <textarea
+      #campoMensagem
+      id="feedback-mensagem"
+      formControlName="mensagem"
+      placeholder="Pedidos de melhorias, feedbacks, e tudo mais!"
+      [class.campo-invalido]="tentouSubmeter() && formulario.controls.mensagem.invalid"
+    ></textarea>
+    <app-erro-campo
+      rotulo="Mensagem"
+      [mostrar]="tentouSubmeter() && formulario.controls.mensagem.invalid"
+    />
+  </div>
+
+  <div class="formulario-mensagem-feedback__acoes">
+    <button type="submit">Enviar</button>
+    <button type="button" (click)="aoCancelar()">Cancelar</button>
+  </div>
+</form>

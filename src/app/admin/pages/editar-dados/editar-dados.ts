@@ -1,8 +1,9 @@
 import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditModal, EditModalFeedback } from '../../../shared/components/edit-modal/edit-modal';
 import { ConfirmModal } from '../../../shared/components/confirm-modal/confirm-modal';
+import { ErroCampo } from '../../../shared/components/erro-campo/erro-campo';
 import { Role } from '../../../shared/models/enums/role.enum';
 import {
   AboutModel,
@@ -13,8 +14,8 @@ import {
   ArrayHabilitiesModel,
   HabilitiesModel,
 } from '../../../shared/models/interfaces/habilities.model';
-import { AtrasoService } from '../../../shared/services/atraso.service/atraso.service';
 import { AuthService } from '../../../shared/services/auth.service/auth.service';
+import { FeedbackAcaoService } from '../../../shared/services/feedback-acao.service/feedback-acao.service';
 import { HabilidadeService } from '../../../shared/services/habilidade.service/habilidade.service';
 import { PessoaService } from '../../../shared/services/pessoa.service/pessoa.service';
 import { ThemeService } from '../../../shared/services/theme.service/theme.service';
@@ -46,13 +47,17 @@ interface HabilidadeSelecionada {
   habilidade: HabilitiesModel;
 }
 
+const CAMPOS_DADOS_PESSOAIS = ['nome', 'idade', 'carreira', 'profissao', 'empresa'] as const;
+
 @Component({
   selector: 'app-editar-dados',
   imports: [
     ReactiveFormsModule,
     NgOptimizedImage,
+    NgTemplateOutlet,
     ConfirmModal,
     EditModal,
+    ErroCampo,
     FormularioHabilidade,
     FormularioDescricaoAbout,
   ],
@@ -64,12 +69,12 @@ export class EditarDados {
   private readonly pessoaService = inject(PessoaService);
   private readonly habilidadeService = inject(HabilidadeService);
   private readonly themeService = inject(ThemeService);
-  private readonly atrasoService = inject(AtrasoService);
+  private readonly feedbackAcaoService = inject(FeedbackAcaoService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly campoNome = viewChild<ElementRef<HTMLInputElement>>('campoNome');
 
   protected readonly sessao = this.authService.sessao;
-  protected readonly ehSuper = computed(() => this.sessao()?.role === Role.SUPER);
+  protected readonly ehSuper = computed(() => this.authService.role() === Role.SUPER);
   protected readonly temaEscuro = this.themeService.temaEscuro;
 
   protected readonly pessoas = signal<ArrayAboutModel[]>([]);
@@ -119,6 +124,10 @@ export class EditarDados {
       this.pessoaEmEdicao.set(entrada);
       this.preencherFormulario(entrada.dados);
     }
+  }
+
+  protected ehImagemPlaceholder(imagem: string): boolean {
+    return !imagem || imagem === '/logo.svg';
   }
 
   protected aoSelecionarImagem(evento: Event): void {
@@ -194,29 +203,30 @@ export class EditarDados {
   protected async salvar(): Promise<void> {
     this.tentouSubmeter.set(true);
 
-    if (this.formulario.invalid) {
+    const dadosPessoaisInvalidos = CAMPOS_DADOS_PESSOAIS.some(
+      (campo) => this.formulario.controls[campo].invalid,
+    );
+    if (dadosPessoaisInvalidos) {
       this.campoNome()?.nativeElement.focus();
       return;
     }
 
     const dados = this.formulario.getRawValue();
-    this.feedback.set({ estado: 'carregando', mensagem: '' });
 
-    await this.atrasoService.aguardar(600);
-
-    const entradaAtual = this.pessoaEmEdicao();
-    if (entradaAtual) {
-      this.pessoaService.salvar(entradaAtual.id, dados);
-      this.pessoaEmEdicao.set(this.pessoaService.buscarPorId(entradaAtual.id) ?? null);
-    } else {
-      this.pessoaEmEdicao.set(this.pessoaService.criarNova(dados));
-    }
-
-    this.feedback.set({ estado: 'sucesso', mensagem: '' });
-    setTimeout(() => {
-      this.feedback.set(null);
-      this.modalDadosPessoaisAberto.set(false);
-    }, 1200);
+    await this.feedbackAcaoService.executar(this.feedback, {
+      delayCarregando: 600,
+      acao: () => {
+        const entradaAtual = this.pessoaEmEdicao();
+        if (entradaAtual) {
+          this.pessoaService.salvar(entradaAtual.id, dados);
+          this.pessoaEmEdicao.set(this.pessoaService.buscarPorId(entradaAtual.id) ?? null);
+        } else {
+          this.pessoaEmEdicao.set(this.pessoaService.criarNova(dados));
+        }
+      },
+      delaySucesso: 1200,
+      aoSucesso: () => this.modalDadosPessoaisAberto.set(false),
+    });
   }
 
   protected abrirCriacaoHabilidade(): void {
@@ -238,23 +248,23 @@ export class EditarDados {
     const idAtual = this.pessoaEmEdicao()!.id;
     const emEdicao = this.habilidadeEmEdicao();
 
-    this.feedbackHabilidade.set({ estado: 'carregando', mensagem: '' });
-    await this.atrasoService.aguardar(500);
+    await this.feedbackAcaoService.executar(this.feedbackHabilidade, {
+      delayCarregando: 500,
+      acao: () => {
+        if (emEdicao) {
+          this.habilidadeService.atualizar(idAtual, emEdicao.indice, habilidade);
+        } else {
+          this.habilidadeService.criar(idAtual, habilidade);
+        }
 
-    if (emEdicao) {
-      this.habilidadeService.atualizar(idAtual, emEdicao.indice, habilidade);
-    } else {
-      this.habilidadeService.criar(idAtual, habilidade);
-    }
-
-    this.versaoHabilidades.update((versao) => versao + 1);
-    this.feedbackHabilidade.set({ estado: 'sucesso', mensagem: '' });
-
-    setTimeout(() => {
-      this.feedbackHabilidade.set(null);
-      this.habilidadeEmEdicao.set(null);
-      this.modalHabilidadeAberto.set(false);
-    }, 800);
+        this.versaoHabilidades.update((versao) => versao + 1);
+      },
+      delaySucesso: 800,
+      aoSucesso: () => {
+        this.habilidadeEmEdicao.set(null);
+        this.modalHabilidadeAberto.set(false);
+      },
+    });
   }
 
   protected pedirRemocaoHabilidadeEmEdicao(): void {
@@ -288,17 +298,15 @@ export class EditarDados {
       return;
     }
 
-    this.feedbackDescricao.set({ estado: 'carregando', mensagem: '' });
-    await this.atrasoService.aguardar(500);
-
-    this.pessoaService.salvar(entradaAtual.id, this.formulario.getRawValue());
-    this.pessoaEmEdicao.set(this.pessoaService.buscarPorId(entradaAtual.id) ?? null);
-
-    this.feedbackDescricao.set({ estado: 'sucesso', mensagem: '' });
-    setTimeout(() => {
-      this.feedbackDescricao.set(null);
-      this.campoDescricaoEmEdicao.set(null);
-    }, 800);
+    await this.feedbackAcaoService.executar(this.feedbackDescricao, {
+      delayCarregando: 500,
+      acao: () => {
+        this.pessoaService.salvar(entradaAtual.id, this.formulario.getRawValue());
+        this.pessoaEmEdicao.set(this.pessoaService.buscarPorId(entradaAtual.id) ?? null);
+      },
+      delaySucesso: 800,
+      aoSucesso: () => this.campoDescricaoEmEdicao.set(null),
+    });
   }
 
   protected pedirRemocaoHabilidade(indice: number, habilidade: HabilitiesModel): void {

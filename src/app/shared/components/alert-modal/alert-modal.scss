@@ -1,0 +1,43 @@
+@use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/hover-scale' as escala;
+@use '../../../../styles/focus-ring' as foco;
+
+:host {
+  display: block;
+}
+
+.alert-modal {
+  @include flex.flexbox($direction: column);
+
+  gap: 1.25rem;
+  width: min(90vw, 360px);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), var(--background-main);
+  color: var(--white-text);
+  box-shadow: 0 1rem 2rem var(--card-box-shadow);
+
+  @include bp.responsivo('celular') {
+    padding: 1.25rem;
+  }
+}
+
+.alert-modal__acoes {
+  @include flex.flexbox($justify: flex-end);
+}
+
+.alert-modal__confirmar {
+  @include flex.flexbox($align: center, $inline: true);
+  @include escala.hover-scale;
+  @include foco.focus-ring;
+
+  gap: 0.375rem;
+  border: none;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  background: var(--background-header);
+  color: var(--white-text);
+  font-family: var(--text-font-secundary);
+}

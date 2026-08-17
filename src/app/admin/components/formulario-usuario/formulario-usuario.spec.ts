@@ -67,6 +67,8 @@ describe('FormularioUsuario', () => {
     expect(spy).not.toHaveBeenCalled();
     expect(document.activeElement).toBe(campoUsuario());
     expect(campoUsuario().classList.contains('campo-invalido')).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain('Usuário é um campo obrigatório.');
+    expect(fixture.nativeElement.textContent).toContain('Senha é um campo obrigatório.');
   });
 
   it('deve pré-preencher usuário e role, mas não a senha, e desabilitar o campo usuário ao editar', () => {

@@ -41,6 +41,12 @@ export class PessoaService {
     return this.store.ler<ArrayAboutModel>(CHAVE_PESSOAS);
   }
 
+  resolverUsuarioAdmin(id: number): string | null {
+    const vinculos = this.lerVinculos();
+    const usuario = Object.entries(vinculos).find(([, idVinculado]) => idVinculado === id);
+    return usuario ? usuario[0] : null;
+  }
+
   buscarPorId(id: number): ArrayAboutModel | undefined {
     return this.listarTodas().find((entrada) => entrada.id === id);
   }
@@ -70,16 +76,12 @@ export class PessoaService {
   private criarEntrada(dados: AboutModel): ArrayAboutModel {
     const entradas = this.listarTodas();
     const novaEntrada: ArrayAboutModel = {
-      id: this.proximoId(entradas),
+      id: this.store.proximoId(entradas),
       dados: this.comImagemResolvida(dados),
     };
     entradas.push(novaEntrada);
     this.store.gravar(CHAVE_PESSOAS, entradas);
     return novaEntrada;
-  }
-
-  private proximoId(entradas: ArrayAboutModel[]): number {
-    return entradas.reduce((maior, entrada) => Math.max(maior, entrada.id + 1), 0);
   }
 
   private comImagemResolvida(dados: AboutModel): AboutModel {

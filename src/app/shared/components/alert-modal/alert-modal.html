@@ -1,0 +1,16 @@
+<div
+  class="alert-modal"
+  role="alertdialog"
+  aria-modal="true"
+  aria-labelledby="alert-modal-titulo"
+  aria-describedby="alert-modal-mensagem"
+>
+  <h2 id="alert-modal-titulo">{{ titulo() }}</h2>
+  <p id="alert-modal-mensagem">{{ mensagem() }}</p>
+
+  <div class="alert-modal__acoes">
+    <button type="button" class="alert-modal__confirmar" (click)="aoFechar()">
+      {{ rotuloAcao() }}
+    </button>
+  </div>
+</div>

@@ -16,6 +16,12 @@ describe('escopoAdminGuard', () => {
       boolean | UrlTree;
   }
 
+  function executarGuardSemId(): boolean | UrlTree {
+    const route = { paramMap: convertToParamMap({}) } as ActivatedRouteSnapshot;
+    return TestBed.runInInjectionContext(() => escopoAdminGuard(route, {} as never)) as
+      boolean | UrlTree;
+  }
+
   it('deve permitir o acesso quando a sessão admin corresponde ao segmento :id da rota', async () => {
     const authService = TestBed.inject(AuthService);
     await authService.autenticar('admin', '123@', IntentLogin.LOGIN);
@@ -43,5 +49,27 @@ describe('escopoAdminGuard', () => {
     const resultado = executarGuard('admin');
 
     expect(resultado).toBe(true);
+  });
+
+  describe('rota sem segmento :id (caso de /admin/control)', () => {
+    it('deve redirecionar uma sessão admin para o próprio painel, já que ela nunca corresponde a essa rota', async () => {
+      const authService = TestBed.inject(AuthService);
+      const router = TestBed.inject(Router);
+      await authService.autenticar('admin', '123@', IntentLogin.LOGIN);
+
+      const resultado = executarGuardSemId() as UrlTree;
+
+      expect(resultado).toBeInstanceOf(UrlTree);
+      expect(router.serializeUrl(resultado)).toBe('/admin/admin');
+    });
+
+    it('deve permitir o acesso de uma sessão super, sem redirecionar', async () => {
+      const authService = TestBed.inject(AuthService);
+      await authService.autenticar('superAdmin', '123Super', IntentLogin.LOGIN);
+
+      const resultado = executarGuardSemId();
+
+      expect(resultado).toBe(true);
+    });
   });
 });

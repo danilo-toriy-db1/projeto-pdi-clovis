@@ -1,35 +1,37 @@
 <section class="editar-usuarios">
   <h1>Editar Usuários</h1>
 
-  <ul class="editar-usuarios__grade-usuarios">
-    @for (usuarioListado of usuarios(); track usuarioListado.usuario) {
-      <li class="editar-usuarios__card-usuario">
-        <button
-          type="button"
-          class="editar-usuarios__abrir-usuario"
-          [attr.aria-label]="'Editar usuário ' + usuarioListado.usuario"
-          (click)="abrirEdicaoUsuario(usuarioListado)"
-        >
-          <h2>{{ usuarioListado.usuario }}</h2>
-          <span class="editar-usuarios__role">{{ usuarioListado.role }}</span>
+  <div class="editar-usuarios__card-principal">
+    <ul class="editar-usuarios__grade-usuarios">
+      @for (usuarioListado of usuarios(); track usuarioListado.usuario) {
+        <li class="editar-usuarios__card-usuario">
+          <button
+            type="button"
+            class="editar-usuarios__abrir-usuario"
+            [attr.aria-label]="'Editar usuário ' + usuarioListado.usuario"
+            (click)="abrirEdicaoUsuario(usuarioListado)"
+          >
+            <h2>{{ usuarioListado.usuario }}</h2>
+            <span class="editar-usuarios__role">{{ usuarioListado.role }}</span>
+          </button>
+        </li>
+      } @empty {
+        <li class="editar-usuarios__sem-usuarios">Nenhum usuário cadastrado.</li>
+      }
+
+      <li class="editar-usuarios__card-usuario editar-usuarios__card-usuario--adicionar">
+        <button type="button" (click)="abrirCriacaoUsuario()" aria-label="Adicionar usuário">
+          <img
+            [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'"
+            width="32"
+            height="32"
+            alt=""
+          />
+          <span>Adicionar usuário</span>
         </button>
       </li>
-    } @empty {
-      <li class="editar-usuarios__sem-usuarios">Nenhum usuário cadastrado.</li>
-    }
-
-    <li class="editar-usuarios__card-usuario editar-usuarios__card-usuario--adicionar">
-      <button type="button" (click)="abrirCriacaoUsuario()" aria-label="Adicionar usuário">
-        <img
-          [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'"
-          width="32"
-          height="32"
-          alt=""
-        />
-        <span>Adicionar usuário</span>
-      </button>
-    </li>
-  </ul>
+    </ul>
+  </div>
 </section>
 
 @if (modalUsuarioAberto()) {

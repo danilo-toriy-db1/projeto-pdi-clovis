@@ -45,4 +45,20 @@ describe('LocalStorageArrayStore', () => {
     expect(store.ler<ItemDeTeste>('chave-a')).toEqual([{ id: 1, nome: 'a' }]);
     expect(store.ler<ItemDeTeste>('chave-b')).toEqual([{ id: 2, nome: 'b' }]);
   });
+
+  describe('proximoId', () => {
+    it('deve devolver 0 quando a lista está vazia', () => {
+      expect(store.proximoId<ItemDeTeste>([])).toBe(0);
+    });
+
+    it('deve devolver o maior id existente mais 1', () => {
+      const itens: ItemDeTeste[] = [
+        { id: 3, nome: 'a' },
+        { id: 7, nome: 'b' },
+        { id: 1, nome: 'c' },
+      ];
+
+      expect(store.proximoId(itens)).toBe(8);
+    });
+  });
 });

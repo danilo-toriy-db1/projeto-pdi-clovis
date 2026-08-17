@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -35,6 +35,7 @@ export class LoginModal {
   private readonly formBuilder = inject(FormBuilder);
 
   readonly intent = input.required<IntentLogin>();
+  readonly acessoNegadoInicial = input(false);
   readonly fechar = output<void>();
 
   protected readonly Role = Role;
@@ -42,6 +43,14 @@ export class LoginModal {
   protected readonly temaEscuro = this.themeService.temaEscuro;
 
   protected readonly estado = signal<EstadoLoginModal>('formulario');
+
+  constructor() {
+    effect(() => {
+      if (this.acessoNegadoInicial()) {
+        this.estado.set(ResultadoAutenticacao.ACESSO_NEGADO);
+      }
+    });
+  }
   protected readonly estadoFeedback = computed<EstadoFeedback | null>(() => {
     if (this.estado() === 'carregando') {
       return 'carregando';

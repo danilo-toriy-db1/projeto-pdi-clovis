@@ -7,11 +7,25 @@
       formControlName="valor"
       [class.campo-invalido]="tentouSubmeter() && formulario.controls.valor.invalid"
     ></textarea>
+    <app-erro-campo
+      [rotulo]="rotulo()"
+      [mostrar]="tentouSubmeter() && formulario.controls.valor.invalid"
+    />
   </div>
 
   <div class="formulario-descricao-about__acoes">
     <button type="submit">Salvar</button>
-    <button type="button" (click)="resetar()">Resetar</button>
+    <button type="button" (click)="pedirReset()">Resetar</button>
     <button type="button" (click)="aoCancelar()">Cancelar</button>
   </div>
 </form>
+
+@if (confirmandoReset()) {
+  <div class="formulario-descricao-about__overlay">
+    <app-confirm-modal
+      [mensagem]="'Limpar o campo ' + rotulo() + '?'"
+      (confirmar)="confirmarReset()"
+      (cancelar)="cancelarReset()"
+    />
+  </div>
+}

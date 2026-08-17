@@ -24,13 +24,53 @@
   </div>
 
   <div class="habilidades-landing__acoes">
-    <button type="button" class="habilidades-landing__botao-adicionar">
+    <button
+      type="button"
+      class="habilidades-landing__botao-adicionar"
+      (click)="abrirSolicitacao(TipoSolicitacaoHabilidade.ADICIONAR)"
+    >
       <img [ngSrc]="temaEscuro() ? '/icons/add-icon.svg' : '/icons/black-add-icon.svg'" width="18" height="18" alt="" />
       Adicionar habilidade
     </button>
-    <button type="button" class="habilidades-landing__botao-remover">
+    <button
+      type="button"
+      class="habilidades-landing__botao-remover"
+      [disabled]="semHabilidades()"
+      (click)="abrirSolicitacao(TipoSolicitacaoHabilidade.REMOVER)"
+    >
       <img ngSrc="/icons/remove-icon.svg" width="18" height="18" alt="" />
       Remover habilidade
     </button>
   </div>
 </section>
+
+@if (loginObrigatorioAberto()) {
+  <div class="habilidades-landing__overlay">
+    <app-alert-modal
+      titulo="Acesso restrito"
+      mensagem="Você deve estar logado para isso!"
+      (fechar)="fecharAvisoLogin()"
+    />
+  </div>
+}
+
+@if (tipoSolicitacaoAberta(); as tipoAberto) {
+  <div class="habilidades-landing__overlay">
+    <app-edit-modal
+      [titulo]="
+        tipoAberto === TipoSolicitacaoHabilidade.ADICIONAR
+          ? 'Solicitar adição de habilidade'
+          : 'Solicitar remoção de habilidade'
+      "
+      [feedback]="feedbackSolicitacao()"
+      (fechar)="cancelarSolicitacao()"
+    >
+      <app-formulario-solicitacao-habilidade
+        [tipoSolicitacao]="tipoAberto"
+        [habilidadesExistentes]="habilidadesTrilha()"
+        (enviar)="enviarSolicitacao($event)"
+        (cancelar)="cancelarSolicitacao()"
+      />
+    </app-edit-modal>
+  </div>
+}

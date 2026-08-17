@@ -88,6 +88,9 @@ describe('FormularioHabilidade', () => {
     expect(spy).not.toHaveBeenCalled();
     expect(document.activeElement).toBe(campoNome());
     expect(campoNome().classList.contains('campo-invalido')).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain(
+      'Nome da habilidade é um campo obrigatório.',
+    );
   });
 
   it('deve pré-preencher o formulário quando uma habilidade inicial é informada, para edição', () => {

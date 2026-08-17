@@ -9,6 +9,10 @@
       autocomplete="username"
       [class.campo-invalido]="tentouSubmeter() && formulario.controls.usuario.invalid"
     />
+    <app-erro-campo
+      rotulo="Usuário"
+      [mostrar]="tentouSubmeter() && formulario.controls.usuario.invalid"
+    />
   </div>
 
   <div class="formulario-usuario__campo">
@@ -19,6 +23,10 @@
       formControlName="senha"
       autocomplete="new-password"
       [class.campo-invalido]="tentouSubmeter() && formulario.controls.senha.invalid"
+    />
+    <app-erro-campo
+      rotulo="Senha"
+      [mostrar]="tentouSubmeter() && formulario.controls.senha.invalid"
     />
   </div>
 

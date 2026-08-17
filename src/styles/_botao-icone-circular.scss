@@ -1,0 +1,16 @@
+@use 'flexbox' as flex;
+@use 'hover-scale' as escala;
+@use 'focus-ring' as foco;
+
+@mixin botao-icone-circular {
+  @include flex.flexbox($align: center, $justify: center, $inline: true);
+  @include escala.hover-scale;
+  @include foco.focus-ring;
+
+  border: none;
+  border-radius: 50%;
+  padding: 0.5rem;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+}

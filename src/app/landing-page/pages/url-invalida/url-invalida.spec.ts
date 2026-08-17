@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Meta, Title } from '@angular/platform-browser';
 import { Router, provideRouter } from '@angular/router';
 import { UrlInvalida } from './url-invalida';
 
@@ -46,5 +47,13 @@ describe('UrlInvalida', () => {
 
     expect(router.navigateByUrl).not.toHaveBeenCalled();
     expect(campoId().classList.contains('campo-invalido')).toBe(true);
+    expect(fixture.nativeElement.textContent).toContain(
+      'Id da Landing Page é um campo obrigatório.',
+    );
+  });
+
+  it('deve definir o título da página e marcar como noindex, nofollow', () => {
+    expect(TestBed.inject(Title).getTitle()).toBe('URL inválida | My Landing Page');
+    expect(TestBed.inject(Meta).getTag('name="robots"')?.content).toBe('noindex, nofollow');
   });
 });

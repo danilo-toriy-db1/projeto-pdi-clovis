@@ -1,54 +1,100 @@
 @use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/hover-scale' as escala;
+@use '../../../../styles/focus-ring' as foco;
+@use '../../../../styles/overlay' as sobreposicao;
+@use '../../../../styles/botao-cta' as cta;
+@use '../../../../styles/botao-adicionar-tracejado' as adicionar;
+@use '../../../../styles/botao-pilula-perigo' as pilula;
+@use '../../../../styles/campo-formulario' as campo;
 
 :host {
   display: block;
   color: var(--white-text);
 }
 
+.editar-dados__card-principal {
+  max-width: 60rem;
+  margin: 1.5rem auto 0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: var(--color-card);
+  color: var(--gray-text);
+  box-shadow: 0 1rem 2rem var(--card-box-shadow);
+}
+
 .editar-dados__lista {
   @include flex.flexbox($direction: column);
 
-  list-style: none;
+  gap: 0.75rem;
+  margin: 0;
   padding: 0;
-  gap: 0.5rem;
+  list-style: none;
 }
 
 .editar-dados__item {
   @include flex.flexbox($align: center, $justify: space-between);
 
   gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  background: var(--color-card);
-  color: var(--gray-text);
 }
 
-.editar-dados__item-acoes {
-  @include flex.flexbox;
+.editar-dados__abrir-entrada {
+  @include flex.flexbox($direction: row, $align: center, $justify: space-between);
+  @include escala.hover-scale(1.02);
+  @include foco.focus-ring;
 
-  gap: 0.5rem;
+  flex: 1;
+  gap: 0.75rem;
+  border: none;
+  border-radius: 1rem;
+  padding: 1.5rem 2rem;
+  cursor: pointer;
+  background: var(--color-card);
+  color: var(--gray-text);
+  box-shadow: 0 1rem 2rem var(--card-box-shadow);
+  font-family: var(--text-font);
+  text-align: left;
 
-  button {
-    @include flex.flexbox($align: center, $inline: true);
-
-    gap: 0.375rem;
-
-    &:hover {
-      cursor: pointer;
-      transform: scale(1.1);
-    }
+  h2 {
+    margin: 0;
+    font-size: 1.1rem;
   }
+}
+
+.editar-dados__id {
+  font-size: 0.875rem;
+  opacity: 0.75;
+}
+
+.editar-dados__remover-entrada {
+  @include flex.flexbox($align: center, $justify: center);
+  @include escala.hover-scale;
+  @include foco.focus-ring;
+
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+}
+
+.editar-dados__item-adicionar {
+  width: 100%;
 }
 
 .editar-dados__criar {
-  @include flex.flexbox($align: center, $inline: true);
+  @include adicionar.botao-adicionar-tracejado;
 
-  gap: 0.375rem;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  padding: 1.5rem 2rem;
+}
 
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.1);
-  }
+.editar-dados__sem-entradas {
+  text-align: center;
 }
 
 .editar-dados__cards {
@@ -68,28 +114,7 @@
   text-align: center;
 
   h2 {
-    margin: 0;
-  }
-}
-
-.editar-dados__card-cabecalho {
-  @include flex.flexbox($align: center, $justify: space-between);
-
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.editar-dados__voltar {
-  border: 1px solid var(--dashed-line-color);
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  color: inherit;
-  background: transparent;
-  font-family: var(--text-font);
-
-  &:hover {
-    transform: scale(1.1);
+    margin: 0 0 1rem;
   }
 }
 
@@ -100,21 +125,9 @@
   margin-top: 1rem;
 
   button[type='submit'] {
-    @include flex.flexbox($align: center, $justify: center, $inline: true);
+    @include cta.botao-cta;
 
     align-self: flex-start;
-    gap: 0.375rem;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.625rem 1.5rem;
-    cursor: pointer;
-    background: var(--background-header);
-    color: var(--white-text);
-    font-family: var(--text-font);
-
-    &:hover {
-      transform: scale(1.1);
-    }
   }
 }
 
@@ -142,21 +155,9 @@
 }
 
 .editar-dados__editar-dados-pessoais {
-  @include flex.flexbox($align: center, $justify: center, $inline: true);
+  @include cta.botao-cta;
 
   margin-top: 1rem;
-  gap: 0.375rem;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  cursor: pointer;
-  background: var(--background-header);
-  color: var(--white-text);
-  font-family: var(--text-font);
-
-  &:hover {
-    transform: scale(1.1);
-  }
 }
 
 .editar-dados__campo {
@@ -166,12 +167,9 @@
 
   input,
   textarea {
-    padding: 0.5rem;
-    border: 1px solid var(--dashed-line-color);
-    border-radius: 0.375rem;
+    @include campo.campo-formulario;
+
     font-family: var(--text-font);
-    background: var(--card-edit);
-    color: var(--gray-text);
   }
 }
 
@@ -204,6 +202,7 @@
 .editar-dados__abrir-habilidade,
 .editar-dados__card-descricao {
   @include flex.flexbox($direction: column, $align: center);
+  @include foco.focus-ring;
 
   width: 100%;
   gap: 0.375rem;
@@ -235,30 +234,10 @@
     backdrop-filter: blur(2px);
     transform: scale(1.05);
   }
-
-  &:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-  }
 }
 
 .editar-dados__card-habilidade--adicionar button {
-  @include flex.flexbox($direction: column, $align: center, $justify: center);
-
-  width: 100%;
-  height: 100%;
-  gap: 0.375rem;
-  border: 1px dashed var(--dashed-line-color);
-  border-radius: 1rem;
-  padding: 1rem;
-  cursor: pointer;
-  background: transparent;
-  color: inherit;
-  font-family: var(--text-font);
-
-  &:hover {
-    transform: scale(1.05);
-  }
+  @include adicionar.botao-adicionar-tracejado;
 }
 
 .editar-dados__tipo-habilidade {
@@ -269,21 +248,10 @@
 
 .editar-dados__remover-habilidade {
   @include flex.flexbox($align: center, $justify: center, $inline: true);
+  @include pilula.botao-pilula-perigo;
 
   margin-top: 0.5rem;
   gap: 0.375rem;
-  border: 1px solid var(--hard-skill-border);
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  background: transparent;
-  color: var(--hard-skill-border);
-  font-family: var(--text-font);
-  font-size: 0.875rem;
-
-  &:hover {
-    transform: scale(1.1);
-  }
 }
 
 .editar-dados__sem-habilidades {
@@ -296,10 +264,5 @@
 }
 
 .editar-dados__overlay {
-  @include flex.flexbox($align: center, $justify: center);
-
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 30;
+  @include sobreposicao.overlay(30);
 }

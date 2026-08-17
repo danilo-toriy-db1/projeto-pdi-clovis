@@ -1,4 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { CategoriaNotificacao } from '../../models/enums/categoria-notificacao.enum';
 import { IntentLogin } from '../../models/enums/intent-login.enum';
 import { ResultadoAutenticacao } from '../../models/enums/resultado-autenticacao.enum';
 import { Role } from '../../models/enums/role.enum';
@@ -8,6 +9,7 @@ import { Sessao } from '../../models/interfaces/sessao.interface';
 import { Usuario } from '../../models/interfaces/usuario.interface';
 import { AtrasoService } from '../atraso.service/atraso.service';
 import { Encrypter } from '../encrypter/encrypter';
+import { NotificacaoService } from '../notificacao.service/notificacao.service';
 import { Router } from '@angular/router';
 
 const CHAVE_USUARIOS = 'login.usuarios';
@@ -24,6 +26,7 @@ const USUARIOS_FIXOS: ReadonlyArray<{ usuario: string; senha: string; role: Role
 export class AuthService {
   private router = inject(Router);
   private readonly atrasoService = inject(AtrasoService);
+  private readonly notificacaoService = inject(NotificacaoService);
   private readonly sessaoSignal = signal<Sessao | null>(this.lerSessao());
   readonly sessao = this.sessaoSignal.asReadonly();
   readonly role = computed<Role | null>(() => this.sessaoSignal()?.role ?? null);
@@ -37,6 +40,10 @@ export class AuthService {
 
   temPermissaoPainelAdmin(role: Role | null): boolean {
     return role === Role.ADMIN || role === Role.SUPER;
+  }
+
+  resolverSegmentoAdmin(sessao: Sessao): string {
+    return sessao.role === Role.SUPER ? 'control' : sessao.usuario;
   }
 
   async autenticar(usuario: string, senha: string, intent: IntentLogin): Promise<ResultadoLogin> {
@@ -84,6 +91,48 @@ export class AuthService {
     });
     this.gravarUsuarios(usuarios);
 
+    this.notificacaoService.criar({
+      categoria: CategoriaNotificacao.LOG,
+      status: null,
+      usuarioOrigem: novoUsuario.usuario,
+      usuarioDestino: null,
+      vista: false,
+      notificacao: {
+        titulo: 'Novo usuário cadastrado',
+        descricao: `${novoUsuario.usuario} foi cadastrado com role ${novoUsuario.role}.`,
+      },
+    });
+
+    return true;
+  }
+
+  async promoverParaAdmin(usuario: string): Promise<boolean> {
+    await this.garantirSeed();
+    const usuarios = this.lerUsuarios();
+    const indice = usuarios.findIndex((umUsuario) => umUsuario.usuario === usuario);
+    if (indice === -1 || usuarios[indice].role !== Role.USER) {
+      return false;
+    }
+
+    usuarios[indice] = { ...usuarios[indice], role: Role.ADMIN };
+    this.gravarUsuarios(usuarios);
+
+    if (this.sessaoSignal()?.usuario === usuario) {
+      this.gravarSessao({ usuario, role: Role.ADMIN });
+    }
+
+    this.notificacaoService.criar({
+      categoria: CategoriaNotificacao.LOG,
+      status: null,
+      usuarioOrigem: usuario,
+      usuarioDestino: null,
+      vista: false,
+      notificacao: {
+        titulo: 'Nova Landing Page criada',
+        descricao: `${usuario} agora é admin e passou a ter sua própria Landing Page.`,
+      },
+    });
+
     return true;
   }
 
@@ -96,6 +145,10 @@ export class AuthService {
     const usuarios = this.lerUsuarios();
     const indice = usuarios.findIndex((umUsuario) => umUsuario.usuario === dados.usuario);
     if (indice === -1) {
+      return false;
+    }
+
+    if (usuarios[indice].role === Role.SUPER && dados.role !== Role.SUPER) {
       return false;
     }
 

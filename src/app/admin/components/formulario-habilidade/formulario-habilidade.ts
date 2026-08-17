@@ -5,11 +5,12 @@ import { TipoHabilidade } from '../../../shared/models/enums/tipo-habilidade.enu
 import { HabilitiesModel } from '../../../shared/models/interfaces/habilities.model';
 import { ICONE_PLACEHOLDER } from '../../../shared/services/habilidade.service/habilidade.service';
 import { ThemeService } from '../../../shared/services/theme.service/theme.service';
+import { ErroCampo } from '../../../shared/components/erro-campo/erro-campo';
 import { SeletorIconeHabilidade } from '../seletor-icone-habilidade/seletor-icone-habilidade';
 
 @Component({
   selector: 'app-formulario-habilidade',
-  imports: [NgOptimizedImage, ReactiveFormsModule, SeletorIconeHabilidade],
+  imports: [NgOptimizedImage, ReactiveFormsModule, SeletorIconeHabilidade, ErroCampo],
   templateUrl: './formulario-habilidade.html',
   styleUrl: './formulario-habilidade.scss',
 })

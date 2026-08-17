@@ -16,12 +16,12 @@
 
 **Expected:** a navegação segue para `/admin/admin` e a Página Inicial do Admin é exibida, com o header mostrando as 3 páginas navegáveis (Página Inicial, Editar Dados, Editar Usuários).
 
-### TC-2 (mandatory) — sessão `super` acessa `/admin/super`
+### TC-2 (mandatory) — sessão `super` acessa `/admin/control`
 
 1. Acesse `/login`.
 2. Clique no botão "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`.
 
-**Expected:** a navegação segue para `/admin/super` e a Página Inicial do Admin é exibida, com acesso integral às telas "Editar Dados" e "Editar Usuários".
+**Expected:** a navegação segue para `/admin/control` e a Página Inicial do Admin é exibida, com acesso integral às telas "Editar Dados" e "Editar Usuários".
 
 ### TC-3 (mandatory) — sessão role `user` navega direto para `/admin/admin` pela URL → bloqueada
 
@@ -88,14 +88,14 @@
 
 ### TC-11 (mandatory) — sessão `super` vê a lista completa de entradas em "Editar Dados"
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super`.
-2. No header, clique em "Editar Dados" (ou navegue para `/admin/super/editar-dados`).
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control`.
+2. No header, clique em "Editar Dados" (ou navegue para `/admin/control/editar-dados`).
 
 **Expected:** a lista completa de entradas de `ArrayAboutModel` é exibida (incluindo qualquer entrada já criada por contas `admin`), com as opções de criar uma nova, editar ou remover qualquer uma delas.
 
 ### TC-12 (mandatory) — sessão `super` cria uma nova entrada de Sobre Mim para outra pessoa
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super/editar-dados`.
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control/editar-dados`.
 2. Acione a criação de uma nova entrada e preencha `nome`, `idade`, `carreira`, `profissao`, `empresa` e `descricao`.
 3. Envie o formulário.
 
@@ -103,7 +103,7 @@
 
 ### TC-13 (mandatory) — sessão `super` remove uma entrada de Sobre Mim, junto com suas habilidades
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super/editar-dados`, com uma entrada existente (criada no TC-12) que já tenha ao menos uma habilidade cadastrada (ver TC-14).
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control/editar-dados`, com uma entrada existente (criada no TC-12) que já tenha ao menos uma habilidade cadastrada (ver TC-14).
 2. Acione a remoção dessa entrada na lista.
 3. No modal de confirmação exibido, confirme a exclusão.
 
@@ -147,7 +147,7 @@
 
 ### TC-18 (mandatory) — cancelar o modal de confirmação não efetiva a remoção
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super/editar-usuarios`.
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control/editar-usuarios`.
 2. Acione a remoção de um usuário existente (que não seja `superAdmin`).
 3. No modal de confirmação exibido, cancele a remoção.
 
@@ -158,7 +158,7 @@
 ### TC-19 (mandatory) — sessão `super` vê todos os usuários, incluindo outras contas `super`
 
 1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`.
-2. No header, clique em "Editar Usuários" (ou navegue para `/admin/super/editar-usuarios`).
+2. No header, clique em "Editar Usuários" (ou navegue para `/admin/control/editar-usuarios`).
 
 **Expected:** a lista exibe todos os usuários cadastrados no domínio Login, incluindo a própria conta `superAdmin` e qualquer outra conta com role `super`.
 
@@ -173,7 +173,7 @@
 
 ### TC-21 (mandatory) — sessão `super` cria usuário com role `super`
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super/editar-usuarios`.
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control/editar-usuarios`.
 2. No formulário de criação, preencha `usuario` com um identificador novo, `senha` com um valor qualquer, e selecione a role `super`.
 3. Envie o formulário.
 
@@ -198,7 +198,7 @@
 
 ### TC-24 (mandatory) — exclusão de um usuário existente após confirmação
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super/editar-usuarios`, com um usuário criado previamente (TC-21 ou TC-22) ainda presente na lista.
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control/editar-usuarios`, com um usuário criado previamente (TC-21 ou TC-22) ainda presente na lista.
 2. Acione a remoção desse usuário.
 3. No modal de confirmação, confirme a exclusão.
 
@@ -206,7 +206,7 @@
 
 ### TC-25 (mandatory) — a conta `superAdmin` nunca é exibida como removível
 
-1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/super/editar-usuarios`.
+1. Acesse `/login`, clique em "Login" e entre com `usuario` `superAdmin` e `senha` `123Super`, chegando a `/admin/control/editar-usuarios`.
 2. Localize a linha da conta `superAdmin` na lista.
 
 **Expected:** a linha da conta `superAdmin` não exibe nenhuma ação de remoção.

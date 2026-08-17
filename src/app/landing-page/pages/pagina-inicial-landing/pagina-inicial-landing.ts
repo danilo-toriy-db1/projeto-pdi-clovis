@@ -20,16 +20,23 @@ export class PaginaInicialLanding {
 
   protected readonly urlRepositorioGithub = URL_REPOSITORIO_GITHUB;
 
-  protected irParaEditarDados(): void {
+  protected async irParaEditarDados(): Promise<void> {
     const sessao = this.authService.sessao();
+
+    if (sessao?.role === Role.USER) {
+      await this.authService.promoverParaAdmin(sessao.usuario);
+      this.router.navigateByUrl(`/admin/${sessao.usuario}`, {
+        state: { vistaInicial: 'editar-dados' },
+      });
+      return;
+    }
 
     if (!this.authService.temPermissaoPainelAdmin(sessao?.role ?? null)) {
       this.router.navigateByUrl('/admin');
       return;
     }
 
-    const segmentoUsuario = sessao!.role === Role.SUPER ? 'control' : sessao!.usuario;
-    this.router.navigateByUrl(`/admin/${segmentoUsuario}`, {
+    this.router.navigateByUrl(`/admin/${this.authService.resolverSegmentoAdmin(sessao!)}`, {
       state: { vistaInicial: 'editar-dados' },
     });
   }

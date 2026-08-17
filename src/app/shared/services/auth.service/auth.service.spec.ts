@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { CategoriaNotificacao } from '../../models/enums/categoria-notificacao.enum';
 import { IntentLogin } from '../../models/enums/intent-login.enum';
 import { ResultadoAutenticacao } from '../../models/enums/resultado-autenticacao.enum';
 import { Role } from '../../models/enums/role.enum';
+import { NotificacaoService } from '../notificacao.service/notificacao.service';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -173,6 +175,98 @@ describe('AuthService', () => {
 
       expect(criado).toBe(false);
     });
+
+    it('deve registrar uma notificação de log ao criar uma conta com sucesso', async () => {
+      const servico = criarServico();
+      const notificacaoService = TestBed.inject(NotificacaoService);
+
+      await servico.criarUsuario(
+        { usuario: 'novo-usuario-log', senha: 'SenhaTeste1', role: Role.USER },
+        null,
+      );
+
+      const logs = notificacaoService.listarPorCategoria(CategoriaNotificacao.LOG);
+      expect(logs).toHaveLength(1);
+      expect(logs[0].usuarioOrigem).toBe('novo-usuario-log');
+      expect(logs[0].notificacao.titulo).toBe('Novo usuário cadastrado');
+      expect(logs[0].vista).toBe(false);
+    });
+
+    it('não deve registrar notificação quando a criação falha', async () => {
+      const servico = criarServico();
+      const notificacaoService = TestBed.inject(NotificacaoService);
+
+      await servico.criarUsuario({ usuario: 'admin', senha: 'SenhaTeste1', role: Role.USER }, null);
+
+      expect(notificacaoService.listarPorCategoria(CategoriaNotificacao.LOG)).toHaveLength(0);
+    });
+  });
+
+  describe('promoverParaAdmin', () => {
+    it('deve mudar a role de um usuário existente com role user para admin', async () => {
+      const servico = criarServico();
+
+      const promovido = await servico.promoverParaAdmin('user');
+
+      expect(promovido).toBe(true);
+      const usuariosSalvos = JSON.parse(localStorage.getItem('login.usuarios') ?? '[]');
+      const registro = usuariosSalvos.find(
+        (usuario: { usuario: string }) => usuario.usuario === 'user',
+      );
+      expect(registro.role).toBe(Role.ADMIN);
+    });
+
+    it('deve atualizar a sessão ativa quando o próprio usuário logado é promovido', async () => {
+      const servico = criarServico();
+      await servico.autenticar('user', '123U', IntentLogin.LOGIN);
+
+      await servico.promoverParaAdmin('user');
+
+      expect(servico.sessao()).toEqual({ usuario: 'user', role: Role.ADMIN });
+    });
+
+    it('não deve alterar a sessão ativa quando outro usuário é promovido', async () => {
+      const servico = criarServico();
+      await servico.autenticar('admin', '123@', IntentLogin.LOGIN);
+
+      await servico.promoverParaAdmin('user');
+
+      expect(servico.sessao()).toEqual({ usuario: 'admin', role: Role.ADMIN });
+    });
+
+    it('deve retornar false para um usuário que não existe', async () => {
+      const servico = criarServico();
+
+      expect(await servico.promoverParaAdmin('nao-existe')).toBe(false);
+    });
+
+    it('deve retornar false ao tentar promover uma conta que já é admin ou super', async () => {
+      const servico = criarServico();
+
+      expect(await servico.promoverParaAdmin('admin')).toBe(false);
+      expect(await servico.promoverParaAdmin('superAdmin')).toBe(false);
+    });
+
+    it('deve registrar uma notificação de log de nova Landing Page ao promover com sucesso', async () => {
+      const servico = criarServico();
+      const notificacaoService = TestBed.inject(NotificacaoService);
+
+      await servico.promoverParaAdmin('user');
+
+      const logs = notificacaoService.listarPorCategoria(CategoriaNotificacao.LOG);
+      expect(logs).toHaveLength(1);
+      expect(logs[0].usuarioOrigem).toBe('user');
+      expect(logs[0].notificacao.titulo).toBe('Nova Landing Page criada');
+    });
+
+    it('não deve registrar notificação quando a promoção falha', async () => {
+      const servico = criarServico();
+      const notificacaoService = TestBed.inject(NotificacaoService);
+
+      await servico.promoverParaAdmin('nao-existe');
+
+      expect(notificacaoService.listarPorCategoria(CategoriaNotificacao.LOG)).toHaveLength(0);
+    });
   });
 
   describe('regras de criação por role de quem cria', () => {
@@ -294,6 +388,39 @@ describe('AuthService', () => {
       );
       expect(registro.role).toBe(Role.USER);
     });
+
+    it('deve sempre rejeitar rebaixar a role de uma conta super para outra role, mesmo por uma sessão super', async () => {
+      const servico = criarServico();
+
+      const atualizado = await servico.atualizarUsuario(
+        { usuario: 'superAdmin', senha: 'Senha1', role: Role.ADMIN },
+        Role.SUPER,
+      );
+
+      expect(atualizado).toBe(false);
+      const usuariosSalvos = JSON.parse(localStorage.getItem('login.usuarios') ?? '[]');
+      const registro = usuariosSalvos.find(
+        (usuario: { usuario: string }) => usuario.usuario === 'superAdmin',
+      );
+      expect(registro.role).toBe(Role.SUPER);
+    });
+
+    it('deve permitir trocar apenas a senha de uma conta super, mantendo a role super', async () => {
+      const servico = criarServico();
+
+      const atualizado = await servico.atualizarUsuario(
+        { usuario: 'superAdmin', senha: 'NovaSenhaSuper1', role: Role.SUPER },
+        Role.SUPER,
+      );
+
+      expect(atualizado).toBe(true);
+      const usuariosSalvos = JSON.parse(localStorage.getItem('login.usuarios') ?? '[]');
+      const registro = usuariosSalvos.find(
+        (usuario: { usuario: string }) => usuario.usuario === 'superAdmin',
+      );
+      expect(registro.role).toBe(Role.SUPER);
+      expect(registro.senha).not.toBe('NovaSenhaSuper1');
+    });
   });
 
   describe('invariante de não exclusão da conta superAdmin', () => {
@@ -357,6 +484,22 @@ describe('AuthService', () => {
 
       expect(servico.rolesCriaveis(Role.ADMIN)).toEqual([Role.USER, Role.ADMIN]);
       expect(servico.rolesCriaveis(null)).toEqual([Role.USER, Role.ADMIN]);
+    });
+  });
+
+  describe('resolverSegmentoAdmin', () => {
+    it('deve devolver "control" para uma sessão super', () => {
+      const servico = criarServico();
+
+      expect(servico.resolverSegmentoAdmin({ usuario: 'superAdmin', role: Role.SUPER })).toBe(
+        'control',
+      );
+    });
+
+    it('deve devolver o próprio usuário para uma sessão admin', () => {
+      const servico = criarServico();
+
+      expect(servico.resolverSegmentoAdmin({ usuario: 'admin', role: Role.ADMIN })).toBe('admin');
     });
   });
 

@@ -26,6 +26,21 @@
       <img [ngSrc]="temaEscuro() ? '/icons/light-mode.svg' : '/icons/dark-mode.svg'" width="20" height="20" alt="" />
     </button>
 
+    @if (!reduzido() && podeVerNotificacoes()) {
+      <button
+        type="button"
+        class="header__botao-notificacoes"
+        aria-label="Notificações de solicitações de habilidade"
+        title="Notificações de solicitações de habilidade"
+        (click)="abrirNotificacoes.emit()"
+      >
+        <img ngSrc="/icons/notification-icon.svg" width="20" height="20" alt="" />
+        @if (contadorNotificacoes() > 0) {
+          <span class="header__badge-notificacoes">{{ contadorNotificacoes() }}</span>
+        }
+      </button>
+    }
+
     @if (!reduzido() && estaAutenticado()) {
       <button
         type="button"

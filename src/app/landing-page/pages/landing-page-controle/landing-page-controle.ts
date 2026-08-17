@@ -7,6 +7,7 @@ import { ArrayAboutModel } from '../../../shared/models/interfaces/about.model';
 import { AuthService } from '../../../shared/services/auth.service/auth.service';
 import { HabilidadeService } from '../../../shared/services/habilidade.service/habilidade.service';
 import { PessoaService } from '../../../shared/services/pessoa.service/pessoa.service';
+import { SeoService } from '../../../shared/services/seo.service/seo.service';
 import {
   LandingPageNaoEncontrada,
   MENSAGEM_LANDING_PAGE_NAO_ENCONTRADA,
@@ -22,10 +23,19 @@ export class LandingPageControle {
   private readonly authService = inject(AuthService);
   private readonly pessoaService = inject(PessoaService);
   private readonly habilidadeService = inject(HabilidadeService);
+  private readonly seoService = inject(SeoService);
 
   private readonly entradasOrdenadas: ArrayAboutModel[] = this.pessoaService
     .listarTodas()
     .sort((a, b) => a.id - b.id);
+
+  constructor() {
+    this.seoService.atualizar({
+      titulo: 'Controle de Landing Pages',
+      descricao: 'Visão do super sobre todas as landing pages cadastradas.',
+      semIndexacao: true,
+    });
+  }
 
   protected readonly mensagemNaoEncontrada = MENSAGEM_LANDING_PAGE_NAO_ENCONTRADA;
   protected readonly ehSuper = computed(() => this.authService.role() === Role.SUPER);

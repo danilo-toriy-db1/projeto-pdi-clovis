@@ -2,6 +2,8 @@
 @use '../../../../styles/flexbox' as flex;
 @use '../../../../styles/brilho-card' as brilho;
 @use '../../../../styles/linha-card' as linha;
+@use '../../../../styles/hover-scale' as escala;
+@use '../../../../styles/focus-ring' as foco;
 
 :host {
   display: block;
@@ -107,6 +109,8 @@
   @include brilho.brilho-card($animado: true);
   @include linha.linha-card();
   @include flex.flexbox($direction: column);
+  @include escala.hover-scale;
+  @include foco.focus-ring(var(--white-text));
 
   box-sizing: border-box;
   gap: 0.5rem;
@@ -127,15 +131,6 @@
 
   img {
     align-self: center;
-  }
-
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--white-text);
-    outline-offset: 2px;
   }
 
   &:link,

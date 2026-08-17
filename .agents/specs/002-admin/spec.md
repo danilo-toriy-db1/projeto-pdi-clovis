@@ -13,7 +13,7 @@ Painel administrativo protegido por autenticação, onde uma sessão `admin` ou 
 
 **In:**
 
-- Painel administrativo com 3 páginas navegáveis pelo header — Página Inicial, Editar Dados, Editar Usuários — acessível em `/admin/{id}` (sessão `admin`) e `/admin/super` (sessão `super`).
+- Painel administrativo com 3 páginas navegáveis pelo header — Página Inicial, Editar Dados, Editar Usuários — acessível em `/admin/{id}` (sessão `admin`) e `/admin/control` (sessão `super`).
 - Página Inicial com 3 cards: alternar o tema da aplicação, voltar para `/landing-page`, ir para "Editar Dados".
 - "Editar Dados": uma sessão `admin` cria e edita sua própria entrada de Sobre Mim (`ArrayAboutModel`/`AboutModel`), criada automaticamente na primeira vez que essa sessão acessa a tela; uma sessão `super` cria, edita e remove a entrada de Sobre Mim de qualquer pessoa. Em ambos os casos, a tela também gerencia as habilidades (`ArrayHabilitiesModel`/`HabilitiesModel`) associadas a cada entrada, cada uma com seu ícone SVG local.
 - "Editar Usuários": listagem de usuários do domínio Login escopada pela role de quem está autenticado, criação de um novo usuário restrita às roles que a role de quem cria permite, e exclusão de um usuário existente (exceto a conta `superAdmin`).
@@ -34,7 +34,7 @@ Painel administrativo protegido por autenticação, onde uma sessão `admin` ou 
 **This spec implements:**
 
 - Entidades `ArrayAboutModel`, `AboutModel`, `DescricaoAbout`, `ArrayHabilitiesModel`, `HabilitiesModel` e o enum `TipoHabilidade` (`SOFT`, `HARD`).
-- Módulo lazy-loaded `admin`, com as rotas `/admin/:id` e `/admin/super`, cada uma com as 3 páginas navegáveis (Página Inicial na raiz, `editar-dados` e `editar-usuarios`).
+- Módulo lazy-loaded `admin`, com as rotas `/admin/:id` e `/admin/control`, cada uma com as 3 páginas navegáveis (Página Inicial na raiz, `editar-dados` e `editar-usuarios`).
 - Componentes de página "Página Inicial", "Editar Dados" e "Editar Usuários".
 - Serviço com Generics (`shared/services`) responsável pela persistência em `localStorage` e pelas regras de `ArrayAboutModel`/`ArrayHabilitiesModel`, incluindo a resolução entre o usuário da sessão autenticada e sua entrada correspondente em `ArrayAboutModel` (criando uma nova entrada quando uma conta `admin` ainda não tiver nenhuma vinculada).
 - Extensão do `AuthService` do domínio Login (`shared/services`) com a listagem de usuários escopada por role, consumida pela tela "Editar Usuários".
@@ -53,7 +53,7 @@ Painel administrativo protegido por autenticação, onde uma sessão `admin` ou 
 ## User stories
 
 1. Como sessão `admin`, quero acessar meu próprio painel em `/admin/{id}`, para gerenciar o tema, os dados da minha Landing Page e os usuários do sistema aos quais tenho acesso.
-2. Como sessão `super`, quero acessar o painel de acesso integral em `/admin/super`, para gerenciar o tema, os dados de qualquer Landing Page e qualquer usuário do sistema.
+2. Como sessão `super`, quero acessar o painel de acesso integral em `/admin/control`, para gerenciar o tema, os dados de qualquer Landing Page e qualquer usuário do sistema.
 3. Como sessão autenticada no painel, quero usar os 3 cards da Página Inicial — alternar tema, voltar para a Landing Page, ir para "Editar Dados" —, para navegar rapidamente pelas ações mais comuns do painel.
 4. Como sessão `admin`, quero editar minha própria entrada de Sobre Mim na tela "Editar Dados", criada automaticamente na primeira vez que acesso essa tela, para manter minha Landing Page atualizada sem depender de outra pessoa.
 5. Como sessão `super`, quero criar, editar e remover a entrada de Sobre Mim de qualquer pessoa na tela "Editar Dados", para administrar o conteúdo de todas as Landing Pages.
@@ -68,14 +68,14 @@ Painel administrativo protegido por autenticação, onde uma sessão `admin` ou 
 **Story 1 e 2 — Acesso ao painel:**
 
 - Given uma sessão com role `admin`, when ela navega para `/admin/{id}` correspondente à própria conta, then a Página Inicial do Admin é exibida.
-- Given uma sessão com role `super`, when ela navega para `/admin/super`, then a Página Inicial do Admin é exibida com acesso integral às demais telas.
+- Given uma sessão com role `super`, when ela navega para `/admin/control`, then a Página Inicial do Admin é exibida com acesso integral às demais telas.
 - Given uma sessão sem role `admin`/`super`, ou nenhuma sessão ativa, when a navegação é direcionada a qualquer rota do painel, then o acesso é bloqueado pelo `AuthGuard` do domínio Login antes de qualquer página do Admin ser exibida.
 
 **Story 3 — Página Inicial:**
 
 - Given a Página Inicial do Admin, when o card 1 é clicado, then o tema ativo da aplicação alterna entre claro e escuro, persistindo a escolha para as demais rotas.
 - Given a Página Inicial do Admin, when o card 2 é clicado, then a navegação segue para `/landing-page`.
-- Given a Página Inicial do Admin, when o card 3 é clicado, then a navegação segue para a tela "Editar Dados" da mesma base de rota (`/admin/{id}/editar-dados` ou `/admin/super/editar-dados`).
+- Given a Página Inicial do Admin, when o card 3 é clicado, then a navegação segue para a tela "Editar Dados" da mesma base de rota (`/admin/{id}/editar-dados` ou `/admin/control/editar-dados`).
 
 **Story 4 — Editar Dados (sessão `admin`):**
 
@@ -114,7 +114,7 @@ Painel administrativo protegido por autenticação, onde uma sessão `admin` ou 
 
 ## Cross-domain dependencies
 
-- **`login`** — fornece o `AuthGuard` que protege `/admin/{id}` e `/admin/super`, o enum `Role`, a entidade `Usuario`, o `Encrypter` e a validação de credenciais; o `AuthService` desse domínio é estendido com a listagem de usuários escopada por role e continua sendo o único responsável por criar, excluir e proteger a conta `superAdmin`. O `LoginModal` desse domínio passa a consumir o componente de feedback visual extraído nesta spec.
+- **`login`** — fornece o `AuthGuard` que protege `/admin/{id}` e `/admin/control`, o enum `Role`, a entidade `Usuario`, o `Encrypter` e a validação de credenciais; o `AuthService` desse domínio é estendido com a listagem de usuários escopada por role e continua sendo o único responsável por criar, excluir e proteger a conta `superAdmin`. O `LoginModal` desse domínio passa a consumir o componente de feedback visual extraído nesta spec.
 - **`landing-page`** — consome `ArrayAboutModel`/`AboutModel` e `ArrayHabilitiesModel`/`HabilitiesModel` geridos aqui para renderizar as páginas Sobre Mim e Habilidades de cada pessoa.
 
 ## Risks and observations

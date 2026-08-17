@@ -35,7 +35,7 @@ dados é feita em `localStorage`, já que o projeto não tem backend, API ou
 banco de dados.
 
 O Admin depende do domínio Login / Autenticação: as rotas `/admin/{id}` e
-`/admin/super` só são alcançáveis por uma sessão autenticada com role `admin`
+`/admin/control` só são alcançáveis por uma sessão autenticada com role `admin`
 ou `super`, através do `AuthGuard` desse domínio. Uma conta com role `admin`
 recém-criada chega a um painel administrativo vazio, sem nenhum registro em
 `ArrayAboutModel` — cabe ao próprio usuário preencher seus dados através da
@@ -51,17 +51,23 @@ dinâmico para exibir. O `:id` refere-se ao id cadastrado.
 - O domínio Admin é servido por um único módulo lazy-loaded, alcançável por
   duas rotas: `/admin/{id}`, o painel de um `admin`, escopado à sua própria
   entrada em `ArrayAboutModel` identificada por esse mesmo `{id}`; e
-  `/admin/super`, o ponto de entrada de acesso integral da role `super`.
+  `/admin/control`, o ponto de entrada de acesso integral da role `super`.
   Ambas as rotas são protegidas pelo `AuthGuard` do domínio Login /
   Autenticação: sem sessão ativa, ou com sessão ativa de role `user`, o
   acesso é bloqueado.
-- O header do Admin oferece exatamente 3 páginas navegáveis: Página Inicial,
-  Editar Dados e Editar Usuários.
-- **Página Inicial do Admin** apresenta uma breve descrição sobre o painel e
-  3 cards:
-  1. alternar o tema (claro/escuro) da aplicação;
-  2. voltar para `/landing-page`;
-  3. ir para a tela "Editar Dados".
+- O header do Admin oferece 3 páginas navegáveis para qualquer sessão `admin`
+  ou `super`: Página Inicial, Editar Dados e Editar Usuários. Uma sessão
+  `super` vê ainda uma 4ª página, exclusiva dela: Notificações (ver seção
+  "Notificações" abaixo).
+- **Página Inicial do Admin** apresenta uma breve descrição sobre o painel e 3
+  cards, com conteúdo diferente conforme a role da sessão:
+  - para uma sessão `admin`: saudação genérica ("Seja bem-vindo(a)!") e os 3
+    cards de sempre — alternar o tema (claro/escuro) da aplicação, voltar para
+    `/landing-page`, e ir para a tela "Editar Dados";
+  - para uma sessão `super`: saudação própria ("Olá, Super admin!") e 3 cards
+    de gestão — "Gerencie Landings Pages", "Gerencie Usuários" e "Envie
+    sugestões" — que, até a definição completa desses fluxos pela fonte de
+    negócio, apenas registram um log no console ao serem clicados.
 - **Editar Usuários** é a tela deste domínio onde usuários do domínio Login /
   Autenticação são criados e excluídos. A listagem de usuários exibida
   nesta tela é escopada pela role de quem está autenticado: uma sessão com
@@ -96,17 +102,52 @@ dinâmico para exibir. O `:id` refere-se ao id cadastrado.
     `/landing-page/:id`, múltiplas entradas podem compartilhar o mesmo `id`
     (uma por habilidade daquela pessoa); a remoção de uma entrada também
     exige a mesma confirmação prévia em modal.
+  - Uma sessão `super` vê, por padrão, a lista completa de entradas
+    `ArrayAboutModel` cadastradas; ao clicar em "Editar" numa entrada
+    existente (ou ao criar uma nova), a edição de "Sobre Mim" e Habilidades
+    dessa pessoa abre em um modal sobre a própria lista, que permanece
+    visível por trás — fechar o modal volta para a lista. Uma sessão `admin`
+    não vê essa lista: edita diretamente, sem modal, apenas a própria entrada
+    vinculada à sua conta.
 - Cada habilidade cadastrada tem um tipo (`TipoHabilidade`: `SOFT` ou
   `HARD`) e um ícone SVG local próprio, independente do tipo.
 - O tema alternado pelo primeiro card da Página Inicial do Admin é o mesmo
   tema global da aplicação (o mesmo alternado no header da Landing Page e da
   tela `/login`) — não existe um tema exclusivo do painel Admin.
+- **Notificações** é a tela deste domínio, exclusiva a uma sessão `super`, que
+  reúne o histórico de eventos relevantes da aplicação, separado em duas
+  categorias:
+  - **notificações do sistema** — o log do fluxo de sugestão de habilidade
+    entre um usuário e o admin de destino (domínio Landing Page): cada envio
+    de sugestão gera um registro com status `pendente`, `usuarioOrigem` (quem
+    sugeriu) e `usuarioDestino` (o admin dono da Landing Page); o registro é
+    atualizado para `aprovada` ou `rejeitada` quando o admin decide na tela
+    "Solicitações de Habilidade", sem nunca ser removido — a tela de
+    Notificações é somente leitura, a decisão em si continua acontecendo em
+    "Solicitações de Habilidade";
+  - **notificações de log** — eventos administrativos sem workflow de
+    aprovação, cada um com `usuarioOrigem` e `usuarioDestino` nulo: "Novo
+    usuário cadastrado" (toda vez que uma conta é criada, pela tela "Editar
+    Usuários" ou pelo modal de `/login`) e "Nova Landing Page criada" (toda
+    vez que uma sessão `user` se autopromove a `admin` pela Landing Page — ver
+    domínio Login / Autenticação).
+  As duas categorias são exibidas em seções separadas, cada uma organizada
+  como um card único (no mesmo estilo do card principal de "Editar Usuários")
+  com uma grade de 3 colunas. O ícone de notificações do header, para uma
+  sessão `super`, exibe a quantidade de notificações (de ambas as categorias)
+  que ainda não foram vistas — abrir a tela de Notificações marca todas como
+  vistas, zerando essa contagem, mas as que estavam não vistas ao abrir
+  permanecem destacadas com uma cor diferente enquanto essa visita à tela
+  durar. Para uma sessão `admin`, o ícone de notificações do header mantém o
+  comportamento de sempre: a quantidade de solicitações de habilidade
+  pendentes para ela, abrindo a tela "Solicitações de Habilidade" ao ser
+  clicado.
 
 ## Fluxos e ciclo de vida
 
 - **Acesso ao painel:** uma sessão autenticada com role `admin` navega para
   `/admin/{id}` (o `{id}` vinculado à própria conta) e uma sessão `super`
-  navega para `/admin/super`; em ambos os casos a navegação chega à Página
+  navega para `/admin/control`; em ambos os casos a navegação chega à Página
   Inicial do Admin.
 - **Alternância de tema (card 1):** ao clicar no primeiro card da Página
   Inicial, o tema ativo da aplicação alterna entre claro e escuro,
@@ -187,12 +228,36 @@ dinâmico para exibir. O `:id` refere-se ao id cadastrado.
   O campo `icone` contém apenas o nome do arquivo SVG local da
   habilidade (por exemplo, `"javascript.svg"`), nunca uma URL externa.
 - **`TipoHabilidade`** (enum) — `SOFT = "soft-skill"`, `HARD = "hard-skill"`.
+- **`ArrayNotificacaoModel`** — Entidade:
+```typescript
+  type ArrayNotificacaoModel = {
+    id: number,
+    categoria: CategoriaNotificacao,
+    status: StatusNotificacao | null,
+    usuarioOrigem: string,
+    usuarioDestino: string | null,
+    vista: boolean,
+    notificacao: Notificacao,
+  }
+```
+  `status` só é preenchido para `categoria: 'sistema'` (`null` para
+  `'log'`, que não tem workflow de aprovação); `usuarioDestino` só é
+  preenchido quando a notificação tem um admin de destino específico (o
+  fluxo de sugestão de habilidade), sendo `null` nas notificações de log.
+  `vista` controla se essa notificação já foi contabilizada no ícone de
+  notificações do header de uma sessão `super`.
+- **`Notificacao`** — Entidade: `{ titulo: string, descricao: string }`. O
+  conteúdo textual exibido em cada card da tela de Notificações.
+- **`CategoriaNotificacao`** (enum) — `LOG = "log"`, `SISTEMA = "sistema"`.
+- **`StatusNotificacao`** (enum) — `PENDENTE = "pendente"`, `APROVADA =
+  "aprovada"`, `REJEITADA = "rejeitada"`.
 
-Este domínio gerencia diretamente `ArrayAboutModel`/`AboutModel` e
-`ArrayHabilitiesModel`/`HabilitiesModel`/`TipoHabilidade`. Os modelos de
-usuário, a role e a proteção da conta `superAdmin` manipulados pela tela
-"Editar Usuários" pertencem ao domínio Login / Autenticação — este domínio
-apenas expõe a tela onde esses dados são criados e excluídos.
+Este domínio gerencia diretamente `ArrayAboutModel`/`AboutModel`,
+`ArrayHabilitiesModel`/`HabilitiesModel`/`TipoHabilidade` e
+`ArrayNotificacaoModel`/`Notificacao`/`CategoriaNotificacao`/`StatusNotificacao`.
+Os modelos de usuário, a role e a proteção da conta `superAdmin` manipulados
+pela tela "Editar Usuários" pertencem ao domínio Login / Autenticação — este
+domínio apenas expõe a tela onde esses dados são criados e excluídos.
 
 ## Restrições e validações
 

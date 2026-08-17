@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Meta, Title } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { IntentLogin } from '../../../shared/models/enums/intent-login.enum';
 import { AboutModel } from '../../../shared/models/interfaces/about.model';
@@ -123,5 +124,14 @@ describe('LandingPageControle', () => {
 
     expect(fixture.nativeElement.querySelector('.landing-page-controle__vazio')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('.landing-page-controle__paginacao')).toBeNull();
+  });
+
+  it('deve definir o título da página e marcar como noindex, nofollow', () => {
+    criar();
+
+    expect(TestBed.inject(Title).getTitle()).toBe(
+      'Controle de Landing Pages | My Landing Page',
+    );
+    expect(TestBed.inject(Meta).getTag('name="robots"')?.content).toBe('noindex, nofollow');
   });
 });

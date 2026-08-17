@@ -1,0 +1,116 @@
+@use '../../../../styles/breakpoints' as bp;
+@use '../../../../styles/flexbox' as flex;
+@use '../../../../styles/hover-scale' as escala;
+
+:host {
+  display: block;
+  color: var(--white-text);
+  text-align: center;
+}
+
+.notificacoes-admin__card-principal {
+  @include flex.flexbox($direction: column);
+
+  gap: 2rem;
+  max-width: 60rem;
+  margin: 1.5rem auto 0;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background: var(--color-card);
+  color: var(--gray-text);
+  box-shadow: 0 1rem 2rem var(--card-box-shadow);
+}
+
+.notificacoes-admin__secao {
+  text-align: left;
+
+  h2 {
+    margin: 0;
+    text-align: center;
+  }
+}
+
+.notificacoes-admin__legenda {
+  margin: 0.25rem 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.notificacoes-admin__grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  @include bp.responsivo('tablet') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp.responsivo('celular') {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notificacoes-admin__card {
+  @include flex.flexbox($direction: column);
+  @include escala.hover-scale(1.02);
+
+  gap: 0.375rem;
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  background: var(--card-edit);
+  color: var(--gray-text);
+  box-shadow: 0 0.5rem 1rem var(--card-box-shadow);
+  transition: border-color 200ms ease-in-out, background 200ms ease-in-out;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.notificacoes-admin__card--novo {
+  border-color: var(--notificacao-nova);
+  background: var(--notificacao-nova-fundo);
+}
+
+.notificacoes-admin__status {
+  align-self: flex-start;
+  border-radius: 999px;
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.notificacoes-admin__status--pendente {
+  background: var(--nav-ativo);
+  color: #2b1f47;
+}
+
+.notificacoes-admin__status--aprovada {
+  background: var(--background-header);
+  color: var(--white-text);
+}
+
+.notificacoes-admin__status--rejeitada {
+  background: var(--hard-skill-border);
+  color: var(--white-text);
+}
+
+.notificacoes-admin__partes {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.notificacoes-admin__vazio {
+  grid-column: 1 / -1;
+  text-align: center;
+}

@@ -17,6 +17,10 @@
       formControlName="id"
       [class.campo-invalido]="tentouSubmeter() && formulario.controls.id.invalid"
     />
+    <app-erro-campo
+      rotulo="Id da Landing Page"
+      [mostrar]="tentouSubmeter() && formulario.controls.id.invalid"
+    />
     <button type="submit">Acessar</button>
   </form>
 </main>

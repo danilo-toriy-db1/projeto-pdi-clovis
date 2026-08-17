@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { By, Meta, Title } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -82,5 +82,33 @@ describe('LoginPage', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('app-login-modal')).not.toBeNull();
+  });
+
+  it('deve definir o título da página e marcar como noindex, nofollow', () => {
+    expect(TestBed.inject(Title).getTitle()).toBe('Login | My Landing Page');
+    expect(TestBed.inject(Meta).getTag('name="robots"')?.content).toBe('noindex, nofollow');
+  });
+
+  describe('redirecionado pelo AuthGuard (state do router, sem query param)', () => {
+    afterEach(() => {
+      history.replaceState(null, '');
+    });
+
+    it('deve abrir o modal automaticamente já no estado de Acesso Negado', () => {
+      history.replaceState({ acessoNegado: true }, '');
+
+      const novaFixture = TestBed.createComponent(LoginPage);
+      novaFixture.detectChanges();
+
+      expect(novaFixture.nativeElement.querySelector('app-login-modal')).not.toBeNull();
+      expect(novaFixture.nativeElement.textContent).toContain('Acesso Negado');
+    });
+
+    it('não deve abrir nenhum modal quando não há state de acesso negado', () => {
+      const novaFixture = TestBed.createComponent(LoginPage);
+      novaFixture.detectChanges();
+
+      expect(novaFixture.nativeElement.querySelector('app-login-modal')).toBeNull();
+    });
   });
 });

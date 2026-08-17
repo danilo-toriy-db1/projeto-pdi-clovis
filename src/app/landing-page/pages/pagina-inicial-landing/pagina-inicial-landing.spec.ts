@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { axe } from 'jest-axe';
+import { CategoriaNotificacao } from '../../../shared/models/enums/categoria-notificacao.enum';
 import { IntentLogin } from '../../../shared/models/enums/intent-login.enum';
+import { Role } from '../../../shared/models/enums/role.enum';
 import { AuthService } from '../../../shared/services/auth.service/auth.service';
+import { NotificacaoService } from '../../../shared/services/notificacao.service/notificacao.service';
 import { ThemeService } from '../../../shared/services/theme.service/theme.service';
 import { PaginaInicialLanding } from './pagina-inicial-landing';
 
@@ -49,13 +52,17 @@ describe('PaginaInicialLanding', () => {
     expect(router.navigateByUrl).toHaveBeenCalledWith('/admin');
   });
 
-  it('card 2 com sessão user navega para /admin, bloqueada como se não houvesse sessão', async () => {
+  it('card 2 com sessão user promove a própria conta para admin e navega direto para sua Landing Page', async () => {
     const authService = TestBed.inject(AuthService);
     await authService.autenticar('user', '123U', IntentLogin.LOGIN);
 
     (cards()[1] as HTMLButtonElement).click();
+    await fixture.whenStable();
 
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/admin');
+    expect(authService.sessao()?.role).toBe(Role.ADMIN);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/user', {
+      state: { vistaInicial: 'editar-dados' },
+    });
   });
 
   it('card 2 com sessão admin navega direto para /admin/admin, sinalizando a vista de editar dados', async () => {
@@ -67,6 +74,20 @@ describe('PaginaInicialLanding', () => {
     expect(router.navigateByUrl).toHaveBeenCalledWith('/admin/admin', {
       state: { vistaInicial: 'editar-dados' },
     });
+  });
+
+  it('card 2 com sessão user registra a notificação de log de nova Landing Page', async () => {
+    const authService = TestBed.inject(AuthService);
+    const notificacaoService = TestBed.inject(NotificacaoService);
+    await authService.autenticar('user', '123U', IntentLogin.LOGIN);
+
+    (cards()[1] as HTMLButtonElement).click();
+    await fixture.whenStable();
+
+    const logs = notificacaoService.listarPorCategoria(CategoriaNotificacao.LOG);
+    expect(logs).toHaveLength(1);
+    expect(logs[0].notificacao.titulo).toBe('Nova Landing Page criada');
+    expect(logs[0].usuarioOrigem).toBe('user');
   });
 
   it('card 2 com sessão super navega direto para /admin/control, sinalizando a vista de editar dados', async () => {

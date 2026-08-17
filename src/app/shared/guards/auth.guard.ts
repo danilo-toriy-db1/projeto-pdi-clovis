@@ -10,5 +10,6 @@ export const authGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.createUrlTree(['/login'], { queryParams: { acessoNegado: 'true' } });
+  router.navigateByUrl('/login', { state: { acessoNegado: true } });
+  return false;
 };

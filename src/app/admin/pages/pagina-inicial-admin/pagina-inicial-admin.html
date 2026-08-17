@@ -2,40 +2,82 @@
   <div class="pagina-inicial-admin__hero">
     <div class="pagina-inicial-admin__hero-img">
       <img
-        ngSrc="/logo.svg"
+        ngSrc="/logo.jpg"
         width="160"
-        height="160"
+        height="128"
         alt="Logo do projeto"
         class="pagina-inicial-admin__logo"
-        priority
       />
       <h1 class="pagina-inicial-admin__titulo">Painel Administrativo</h1>
     </div>
 
     <div class="pagina-inicial-admin__hero-texto">
-      <h2 class="pagina-inicial-admin__boas-vindas">Seja bem-vindo(a)!</h2>
-      <p class="pagina-inicial-admin__descricao">
-        Gerencie o tema da aplicação, os dados da sua Landing Page e os usuários do sistema a partir
-        dos cards abaixo.
-      </p>
+      @if (ehSuper()) {
+        <h2 class="pagina-inicial-admin__boas-vindas">Olá, Super admin!</h2>
+        <p class="pagina-inicial-admin__descricao">
+          Gerencie os administradores, usuários e a Landing Page como um todo.
+        </p>
+      } @else {
+        <h2 class="pagina-inicial-admin__boas-vindas">Seja bem-vindo(a)!</h2>
+        <p class="pagina-inicial-admin__descricao">
+          Gerencie o tema da aplicação, os dados da sua Landing Page e os usuários do sistema a partir
+          dos cards abaixo.
+        </p>
+      }
     </div>
   </div>
 
   <div class="pagina-inicial-admin__cards">
-    <button type="button" class="pagina-inicial-admin__card" (click)="alternarTema()">
-      <img ngSrc="/icons/change-icon.svg" width="28" height="28" alt="" />
-      <span class="pagina-inicial-admin__card-titulo">Alternar tema</span>
-      <span>Troque entre o tema claro e o tema escuro da aplicação.</span>
-    </button>
+    @if (ehSuper()) {
+      <button type="button" class="pagina-inicial-admin__card" (click)="aoClicarGerenciarLandingPages()">
+        <img ngSrc="/icons/edit-icon.svg" width="28" height="28" alt="" />
+        <span class="pagina-inicial-admin__card-titulo">Gerencie Landings Pages</span>
+        <span>Gerencie os admins e as landings pages existentes no sistema</span>
+      </button>
 
-    <button type="button" class="pagina-inicial-admin__card" (click)="irParaLandingPage()">
-      <span class="pagina-inicial-admin__card-titulo">Voltar para a Landing Page</span>
-      <span>Veja a aplicação como um visitante a vê.</span>
-    </button>
+      <button type="button" class="pagina-inicial-admin__card" (click)="aoClicarGerenciarUsuarios()">
+        <img ngSrc="/icons/menu.svg" width="28" height="28" alt="" />
+        <span class="pagina-inicial-admin__card-titulo">Gerencie Usuários</span>
+        <span>Gerencie os acessos permitidos na página</span>
+      </button>
 
-    <button type="button" class="pagina-inicial-admin__card" (click)="aoClicarEditarDados()">
-      <span class="pagina-inicial-admin__card-titulo">Editar Dados</span>
-      <span>Cadastre ou atualize os dados e as habilidades exibidos na Landing Page.</span>
-    </button>
+      <button type="button" class="pagina-inicial-admin__card" (click)="abrirModalSugestao()">
+        <img ngSrc="/icons/email-icon.svg" width="28" height="28" alt="" />
+        <span class="pagina-inicial-admin__card-titulo">Envie sugestões</span>
+        <span>
+          Deseja enviar mensagens de feedback para o dev? Fique à vontade para pedidos de
+          melhorias, feedbacks, e tudo mais!
+        </span>
+      </button>
+    } @else {
+      <button type="button" class="pagina-inicial-admin__card" (click)="alternarTema()">
+        <img ngSrc="/icons/change-icon.svg" width="28" height="28" alt="" />
+        <span class="pagina-inicial-admin__card-titulo">Alternar tema</span>
+        <span>Troque entre o tema claro e o tema escuro da aplicação.</span>
+      </button>
+
+      <button type="button" class="pagina-inicial-admin__card" (click)="irParaLandingPage()">
+        <img ngSrc="/icons/logout-icon.svg" width="28" height="28" alt="" />
+        <span class="pagina-inicial-admin__card-titulo">Voltar para a Landing Page</span>
+        <span>Veja a aplicação como um visitante a vê.</span>
+      </button>
+
+      <button type="button" class="pagina-inicial-admin__card" (click)="aoClicarEditarDados()">
+        <img ngSrc="/icons/edit-icon.svg" width="28" height="28" alt="" />
+        <span class="pagina-inicial-admin__card-titulo">Editar Dados</span>
+        <span>Cadastre ou atualize os dados e as habilidades exibidos na Landing Page.</span>
+      </button>
+    }
   </div>
 </section>
+
+@if (modalSugestaoAberto()) {
+  <div class="pagina-inicial-admin__overlay">
+    <app-edit-modal [titulo]="'Envie sugestões'" (fechar)="fecharModalSugestao()">
+      <app-formulario-mensagem-feedback
+        (enviar)="enviarSugestao($event)"
+        (cancelar)="fecharModalSugestao()"
+      />
+    </app-edit-modal>
+  </div>
+}

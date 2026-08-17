@@ -5,8 +5,8 @@ import { ConfirmModal } from '../../../shared/components/confirm-modal/confirm-m
 import { Role } from '../../../shared/models/enums/role.enum';
 import { NovoUsuario } from '../../../shared/models/interfaces/novo-usuario.interface';
 import { Usuario } from '../../../shared/models/interfaces/usuario.interface';
-import { AtrasoService } from '../../../shared/services/atraso.service/atraso.service';
 import { AuthService } from '../../../shared/services/auth.service/auth.service';
+import { FeedbackAcaoService } from '../../../shared/services/feedback-acao.service/feedback-acao.service';
 import { ThemeService } from '../../../shared/services/theme.service/theme.service';
 import { FormularioUsuario } from '../../components/formulario-usuario/formulario-usuario';
 
@@ -19,7 +19,7 @@ import { FormularioUsuario } from '../../components/formulario-usuario/formulari
 export class EditarUsuarios {
   private readonly authService = inject(AuthService);
   private readonly themeService = inject(ThemeService);
-  private readonly atrasoService = inject(AtrasoService);
+  private readonly feedbackAcaoService = inject(FeedbackAcaoService);
 
   protected readonly sessao = this.authService.sessao;
   protected readonly temaEscuro = this.themeService.temaEscuro;
@@ -64,33 +64,35 @@ export class EditarUsuarios {
 
   protected async salvarUsuario(dados: NovoUsuario): Promise<void> {
     this.erroUsuario.set(null);
-    this.feedbackUsuario.set({ estado: 'carregando', mensagem: '' });
-    await this.atrasoService.aguardar(500);
-
     const emEdicao = this.usuarioEmEdicao();
     const roleDeQuemEdita = this.sessao()?.role ?? null;
-    const sucesso = emEdicao
-      ? await this.authService.atualizarUsuario(dados, roleDeQuemEdita)
-      : await this.authService.criarUsuario(dados, roleDeQuemEdita);
 
-    if (!sucesso) {
-      this.feedbackUsuario.set(null);
-      this.erroUsuario.set(
-        emEdicao
-          ? 'Não foi possível salvar as alterações desse usuário.'
-          : 'Esse usuário já existe. Escolha outro identificador.',
-      );
-      return;
-    }
+    await this.feedbackAcaoService.executar(this.feedbackUsuario, {
+      delayCarregando: 500,
+      acao: async () => {
+        const sucesso = emEdicao
+          ? await this.authService.atualizarUsuario(dados, roleDeQuemEdita)
+          : await this.authService.criarUsuario(dados, roleDeQuemEdita);
 
-    await this.carregarUsuarios();
-    this.feedbackUsuario.set({ estado: 'sucesso', mensagem: '' });
+        if (!sucesso) {
+          return {
+            sucesso: false,
+            mensagemErro: emEdicao
+              ? 'Não foi possível salvar as alterações desse usuário.'
+              : 'Esse usuário já existe. Escolha outro identificador.',
+          };
+        }
 
-    setTimeout(() => {
-      this.feedbackUsuario.set(null);
-      this.usuarioEmEdicao.set(null);
-      this.modalUsuarioAberto.set(false);
-    }, 800);
+        await this.carregarUsuarios();
+        return { sucesso: true };
+      },
+      delaySucesso: 800,
+      aoErro: (mensagem) => this.erroUsuario.set(mensagem),
+      aoSucesso: () => {
+        this.usuarioEmEdicao.set(null);
+        this.modalUsuarioAberto.set(false);
+      },
+    });
   }
 
   protected pedirRemocaoUsuarioEmEdicao(): void {

@@ -3,10 +3,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role } from '../../../shared/models/enums/role.enum';
 import { NovoUsuario } from '../../../shared/models/interfaces/novo-usuario.interface';
 import { Usuario } from '../../../shared/models/interfaces/usuario.interface';
+import { ErroCampo } from '../../../shared/components/erro-campo/erro-campo';
 
 @Component({
   selector: 'app-formulario-usuario',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ErroCampo],
   templateUrl: './formulario-usuario.html',
   styleUrl: './formulario-usuario.scss',
 })

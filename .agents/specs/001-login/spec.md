@@ -18,9 +18,9 @@ Autenticação por role sem backend (usuários, senhas e sessão inteiramente em
 - Sessão persistida em `localStorage`, consultada pelo `AuthGuard` e pelo header para decidir a exibição do botão de logout.
 - Dois botões de entrada na tela `/login` — "Login" (acesso geral à aplicação) e "Painel Admin" (acesso dedicado à área administrativa) — abrindo o mesmo modal de credenciais (Reactive Forms), cada um com sua própria regra de sucesso.
 - Os cinco estados visuais do modal de login: Carregando, Usuário Não Encontrado, Credenciais Inválidas, Acesso Negado e Sucesso.
-- Redirecionamento pós-login por role: `user` para `/landing-page`, `admin` para `/admin/{id}` (o `id` vinculado à própria conta), `super` para `/admin/super`.
+- Redirecionamento pós-login por role: `user` para `/landing-page`, `admin` para `/admin/{id}` (o `id` vinculado à própria conta), `super` para `/admin/control`.
 - Bloqueio por "Acesso Negado" quando uma conta role `user` tenta entrar pelo botão "Painel Admin", e quando uma sessão sem role `admin`/`super` (incluindo visitantes sem sessão) navega diretamente para qualquer rota do painel administrativo.
-- `AuthGuard` protegendo as rotas do painel administrativo (`/admin/{id}`, `/admin/super`) contra qualquer sessão sem role `admin` ou `super`.
+- `AuthGuard` protegendo as rotas do painel administrativo (`/admin/{id}`, `/admin/control`) contra qualquer sessão sem role `admin` ou `super`.
 - Criação de conta pelo modal de login, sem exigir sessão prévia, escolhendo o tipo `user` ou `admin`.
 - Regras de criação de usuário por role de quem cria (`super` cria qualquer role, incluindo `super`; `admin` cria apenas `user` ou `admin`) e a invariante de que a conta `superAdmin` (role `super`) nunca pode ser excluída.
 - Botão na tela `/login` para acessar a Landing Page sem autenticação.
@@ -78,14 +78,14 @@ Autenticação por role sem backend (usuários, senhas e sessão inteiramente em
 - Given o mesmo modal, when exatamente um dos dois campos corresponde a um registro válido e o outro não, then o modal exibe "Carregando" por 3 segundos e, em seguida, "Credenciais Inválidas".
 - Given o mesmo modal, when usuário e senha correspondem a um registro com role `user`, then o modal exibe "Carregando" por 3 segundos, em seguida "Sucesso", grava a sessão em `localStorage` e redireciona para `/landing-page`.
 - Given o mesmo modal, when usuário e senha correspondem a um registro com role `admin`, then o modal exibe "Carregando" por 3 segundos, em seguida "Sucesso", grava a sessão em `localStorage` e redireciona para `/admin/{id}`, sendo `{id}` o identificador vinculado a essa conta.
-- Given o mesmo modal, when usuário e senha correspondem a um registro com role `super`, then o modal exibe "Carregando" por 3 segundos, em seguida "Sucesso", grava a sessão em `localStorage` e redireciona para `/admin/super`.
+- Given o mesmo modal, when usuário e senha correspondem a um registro com role `super`, then o modal exibe "Carregando" por 3 segundos, em seguida "Sucesso", grava a sessão em `localStorage` e redireciona para `/admin/control`.
 
 **Story 2 — Painel Admin e `AuthGuard`:**
 
 - Given o modal de login aberto pelo botão "Painel Admin", when usuário e senha correspondem a um registro com role `user`, then o modal exibe "Carregando" por 3 segundos e, em seguida, "Acesso Negado"; a sessão é gravada em `localStorage` (as credenciais são válidas), mas nenhuma navegação para o painel administrativo ocorre.
 - Given o modal de login aberto pelo botão "Painel Admin", when usuário e senha correspondem a um registro com role `admin` ou `super`, then o resultado é o mesmo de "Sucesso" da Story 1 para essa role.
-- Given uma sessão ativa com role `user`, when essa sessão navega diretamente para `/admin/{id}` ou `/admin/super` pela URL, then o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado".
-- Given nenhuma sessão ativa, when a navegação é direcionada para `/admin/{id}` ou `/admin/super` pela URL, then o `AuthGuard` bloqueia o acesso do mesmo modo.
+- Given uma sessão ativa com role `user`, when essa sessão navega diretamente para `/admin/{id}` ou `/admin/control` pela URL, then o `AuthGuard` bloqueia o acesso e apresenta o mesmo feedback de "Acesso Negado".
+- Given nenhuma sessão ativa, when a navegação é direcionada para `/admin/{id}` ou `/admin/control` pela URL, then o `AuthGuard` bloqueia o acesso do mesmo modo.
 
 **Story 3 — Criação de conta:**
 
@@ -115,12 +115,12 @@ Autenticação por role sem backend (usuários, senhas e sessão inteiramente em
 
 ## Cross-domain dependencies
 
-- **`admin`** — consome o `AuthGuard`, o enum `Role` e a invariante de não exclusão da `superAdmin` para implementar a tela "Editar Usuários"; implementa as rotas `/admin/{id}` e `/admin/super` deste domínio, associando o `{id}` à entrada correspondente em `ArrayAboutModel`, inclusive para uma conta `admin` recém-criada ainda sem `id` vinculado.
+- **`admin`** — consome o `AuthGuard`, o enum `Role` e a invariante de não exclusão da `superAdmin` para implementar a tela "Editar Usuários"; implementa as rotas `/admin/{id}` e `/admin/control` deste domínio, associando o `{id}` à entrada correspondente em `ArrayAboutModel`, inclusive para uma conta `admin` recém-criada ainda sem `id` vinculado.
 - **`landing-page`** — recebe o redirecionamento de sessões role `user` após login bem-sucedido, exibe o botão de acesso sem login exposto por esta tela, e consulta a mesma sessão para decidir a exibição do botão de logout do seu header.
 
 ## Risks and observations
 
-- As rotas `/admin/{id}` e `/admin/super` deste redirecionamento ainda não aparecem na documentação autoritativa do domínio `admin` (que hoje descreve apenas a rota plana `/admin`); esse é um drift deliberado desta rodada — o ajuste da documentação do domínio `admin` fica registrado para a fase de plano, sem alteração da skill agora.
+- As rotas `/admin/{id}` e `/admin/control` deste redirecionamento ainda não aparecem na documentação autoritativa do domínio `admin` (que hoje descreve apenas a rota plana `/admin`); esse é um drift deliberado desta rodada — o ajuste da documentação do domínio `admin` fica registrado para a fase de plano, sem alteração da skill agora.
 - As funcionalidades aprimoradas de `/landing-page` para sessões role `user` foram explicitamente adiadas para uma rodada futura — permanecem fora de escopo até serem detalhadas pela fonte de negócio.
 - O mecanismo futuro de exclusão de contas role `super`, já anotado nas skills de `login` e `admin`, continua sem detalhamento nesta rodada — apenas registrado como trabalho futuro.
 - A composição animada da tela `/login` é puramente decorativa (CSS/SASS, sem biblioteca adicional, coerente com a restrição de stack do projeto) e não altera nenhum dos fluxos ou estados de negócio descritos nas demais histórias.

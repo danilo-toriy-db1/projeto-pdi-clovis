@@ -1,37 +1,44 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, UrlTree } from '@angular/router';
+import { Router } from '@angular/router';
 import { IntentLogin } from '../models/enums/intent-login.enum';
 import { AuthService } from '../services/auth.service/auth.service';
 import { authGuard } from './auth.guard';
 
 describe('authGuard', () => {
+  let router: Router;
+
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({});
+    router = TestBed.inject(Router);
+    jest.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
   });
 
-  function executarGuard(): boolean | UrlTree {
+  function executarGuard(): boolean {
     return TestBed.runInInjectionContext(() =>
       authGuard({} as never, { url: '/admin/qualquer' } as never),
-    ) as boolean | UrlTree;
+    ) as boolean;
   }
 
-  it('deve bloquear o acesso quando não há nenhuma sessão ativa', () => {
+  it('deve bloquear o acesso e redirecionar para /login via state (sem query param) quando não há nenhuma sessão ativa', () => {
     const resultado = executarGuard();
 
-    expect(resultado).not.toBe(true);
-    expect((resultado as UrlTree).toString()).toContain('/login');
+    expect(resultado).toBe(false);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login', {
+      state: { acessoNegado: true },
+    });
   });
 
-  it('deve bloquear o acesso quando a sessão ativa tem role user', async () => {
+  it('deve bloquear o acesso e redirecionar da mesma forma quando a sessão ativa tem role user', async () => {
     const authService = TestBed.inject(AuthService);
     await authService.autenticar('user', '123U', IntentLogin.LOGIN);
 
     const resultado = executarGuard();
 
-    expect(resultado).not.toBe(true);
-    expect((resultado as UrlTree).toString()).toContain('/login');
-    expect((resultado as UrlTree).toString()).toContain('acessoNegado');
+    expect(resultado).toBe(false);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login', {
+      state: { acessoNegado: true },
+    });
   });
 
   it('deve permitir o acesso quando a sessão ativa tem role admin', async () => {
@@ -41,6 +48,7 @@ describe('authGuard', () => {
     const resultado = executarGuard();
 
     expect(resultado).toBe(true);
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
   });
 
   it('deve permitir o acesso quando a sessão ativa tem role super', async () => {
@@ -50,13 +58,6 @@ describe('authGuard', () => {
     const resultado = executarGuard();
 
     expect(resultado).toBe(true);
-  });
-
-  it('injeta o Router corretamente para construir a árvore de redirecionamento', () => {
-    const router = TestBed.inject(Router);
-    const resultado = executarGuard() as UrlTree;
-
-    expect(resultado).toBeInstanceOf(UrlTree);
-    expect(router.serializeUrl(resultado)).toContain('/login');
+    expect(router.navigateByUrl).not.toHaveBeenCalled();
   });
 });

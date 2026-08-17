@@ -1,0 +1,56 @@
+<form
+  class="formulario-solicitacao-habilidade"
+  [formGroup]="formulario"
+  (ngSubmit)="enviarSolicitacao()"
+>
+  @if (modoRemocao()) {
+    <div class="formulario-solicitacao-habilidade__campo">
+      <label for="solicitacao-habilidade-existente">Habilidade a remover</label>
+      <select
+        #campoExistente
+        id="solicitacao-habilidade-existente"
+        (change)="selecionarExistente($event)"
+        [class.campo-invalido]="tentouSubmeter() && formulario.controls.habilidade.invalid"
+      >
+        <option value="" disabled selected>Selecione uma habilidade</option>
+        @for (entrada of habilidadesExistentes(); track $index) {
+          <option [value]="$index">
+            {{ entrada.habilidade.habilidade }} ({{ entrada.habilidade.tipo }})
+          </option>
+        }
+      </select>
+      <app-erro-campo
+        rotulo="Habilidade a remover"
+        [mostrar]="tentouSubmeter() && formulario.controls.habilidade.invalid"
+      />
+    </div>
+  } @else {
+    <div class="formulario-solicitacao-habilidade__campo">
+      <label for="solicitacao-habilidade-nome">Nome da habilidade</label>
+      <input
+        #campoHabilidade
+        id="solicitacao-habilidade-nome"
+        type="text"
+        formControlName="habilidade"
+        [class.campo-invalido]="tentouSubmeter() && formulario.controls.habilidade.invalid"
+      />
+      <app-erro-campo
+        rotulo="Nome da habilidade"
+        [mostrar]="tentouSubmeter() && formulario.controls.habilidade.invalid"
+      />
+    </div>
+
+    <div class="formulario-solicitacao-habilidade__campo">
+      <label for="solicitacao-habilidade-tipo">Tipo</label>
+      <select id="solicitacao-habilidade-tipo" formControlName="tipo">
+        <option [value]="TipoHabilidade.SOFT">Soft skill</option>
+        <option [value]="TipoHabilidade.HARD">Hard skill</option>
+      </select>
+    </div>
+  }
+
+  <div class="formulario-solicitacao-habilidade__acoes">
+    <button type="submit">Enviar solicitação</button>
+    <button type="button" (click)="aoCancelar()">Cancelar</button>
+  </div>
+</form>

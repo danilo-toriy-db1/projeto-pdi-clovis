@@ -2,7 +2,9 @@
   <app-header
     [paginas]="paginasLandingPage"
     [paginaAtiva]="vistaAtual()"
+    [contadorNotificacoes]="contadorNotificacoes()"
     (paginaSelecionada)="selecionarVista($event)"
+    (abrirNotificacoes)="abrirNotificacoes()"
   />
   <main class="landing-page-id">
     @switch (vistaAtual()) {

@@ -1,0 +1,53 @@
+<section class="solicitacoes-habilidade">
+  <h1>Solicitações de Habilidade</h1>
+
+  <ul class="solicitacoes-habilidade__lista">
+    @for (solicitacao of solicitacoes(); track solicitacao.id) {
+      <li class="solicitacoes-habilidade__card">
+        <p class="solicitacoes-habilidade__tipo">
+          {{
+            solicitacao.tipoSolicitacao === TipoSolicitacaoHabilidade.ADICIONAR
+              ? 'Adicionar'
+              : 'Remover'
+          }}
+        </p>
+        <h2>{{ solicitacao.solicitacao.habilidade }}</h2>
+        <p>Tipo: {{ solicitacao.solicitacao.tipo }}</p>
+        <p>Solicitado por: {{ solicitacao.solicitacao.usuarioSolicitante }}</p>
+        @if (ehSuper()) {
+          <p class="solicitacoes-habilidade__alvo">
+            Admin alvo: {{ solicitacao.usuarioAdminAlvo ?? 'Sem admin vinculado' }} (pessoa id:
+            {{ solicitacao.idPessoa }})
+          </p>
+        }
+
+        <div class="solicitacoes-habilidade__acoes">
+          <button
+            type="button"
+            class="solicitacoes-habilidade__aceitar"
+            (click)="aceitar(solicitacao)"
+          >
+            <img ngSrc="/icons/add-icon.svg" width="16" height="16" alt="" />
+            Aceitar
+          </button>
+          <button
+            type="button"
+            class="solicitacoes-habilidade__rejeitar"
+            (click)="rejeitar(solicitacao)"
+          >
+            <img ngSrc="/icons/x-delete-icon.svg" width="16" height="16" alt="" />
+            Rejeitar
+          </button>
+        </div>
+      </li>
+    } @empty {
+      <li class="solicitacoes-habilidade__vazio">Nenhuma solicitação pendente no momento.</li>
+    }
+  </ul>
+</section>
+
+@if (feedback(); as estadoAtual) {
+  <div class="solicitacoes-habilidade__overlay">
+    <app-feedback-modal [estado]="estadoAtual.estado" [mensagem]="estadoAtual.mensagem ?? ''" />
+  </div>
+}
